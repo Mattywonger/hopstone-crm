@@ -3,6 +3,7 @@ import { User } from "../providers/user";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { set } from '@firebase/database';
+import { ErrorDisplay } from './Error';
 
 export const SignupPage = () => {
     const { auth, firestore } = User.useContainer()
@@ -40,6 +41,7 @@ export const SignupPage = () => {
     return (
         <div>
             <p>Sign Up</p>
+            {error && <ErrorDisplay error={error} />}
             <form onSubmit={handleSubmit}>
                 <label>
                     Email:
