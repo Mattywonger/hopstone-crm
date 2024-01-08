@@ -30,7 +30,7 @@ export const SignupPage = () => {
         createUserWithEmailAndPassword(auth, email, password).then(user => {
             console.log(user)
             console.log(user.user?.uid)
-            setDoc(doc(firestore, `users/{user.user?.uid}`), {
+            setDoc(doc(firestore, `users/${user.user?.uid}`), {
                 "username": username
             }).catch(setError)
         }).catch(setError)
