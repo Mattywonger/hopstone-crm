@@ -16,7 +16,7 @@ const Header = () => {
         <header className="fixed top-3 left-0 right-0 z-10 flex justify-between items-center w-full p-5 border-b border-slate-400 bg-white">
 
             <div className="logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
-                <img src="/images/HopStone_Capital.jpeg" alt="Hopstone Logo" style={{ maxWidth: '100px', maxHeight: '50px' }} />
+                <img src="/public/HopStone_Capital.jpeg" alt="Hopstone Logo" style={{ maxWidth: '100px', maxHeight: '50px' }} />
             </div>
 
             {/* Container for Register/Login and user icon */}
@@ -27,7 +27,7 @@ const Header = () => {
 
                 <DropdownMenu>
                     <div className="profile">
-                        <img src="/images/unknown-user.png" alt="User Icon" style={{ maxWidth: '50px', maxHeight: '50px' }} />
+                        <img src="/public/unknown-user.png" alt="User Icon" style={{ maxWidth: '50px', maxHeight: '50px' }} />
                     </div>
                     {/* <div className="dropdown-content">
             <a href="/profile">Profile</a>
