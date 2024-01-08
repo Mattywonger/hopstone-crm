@@ -1,6 +1,5 @@
 import { useAuthState } from "react-firebase-hooks/auth"
 import { initFirebase } from "../firebase"
-import { useState } from "react"
 import { createContainer } from "unstated-next"
 
 const { auth, firestore } = initFirebase()
