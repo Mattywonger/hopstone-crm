@@ -4,6 +4,7 @@ import { SignupPage } from './components/signup'
 import { Home } from './components/Home'
 import { LoginPage } from './components/LoginPage'
 
+
 function App() {
   return (
     <BrowserRouter>
@@ -13,6 +14,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
       </Routes>
     </BrowserRouter>
+
   )
 }
 
