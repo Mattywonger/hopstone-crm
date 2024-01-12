@@ -60,12 +60,12 @@
 
 import { Button } from "./ui/button";
 import { DropdownMenu } from "./ui/dropdown-menu";
-import { User } from "../providers/user";
+import { Firebase } from "../providers/user";
 import { signOut } from "@firebase/auth";
 
 const Header = () => {
 
-  let { auth, user } = User.useContainer();
+  let { auth, user } = Firebase.useContainer();
 
   const handleLogoClick = () => {
     window.location.href = '/';

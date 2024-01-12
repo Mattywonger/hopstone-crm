@@ -1,11 +1,11 @@
 import { FormEvent, useState } from 'react'
-import { User } from "../providers/user";
+import { Firebase } from "../providers/user";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { ErrorDisplay } from './Error';
 
 export const SignupPage = () => {
-    const { auth, firestore } = User.useContainer()
+    const { auth, firestore } = Firebase.useContainer()
 
     let [email, setEmail] = useState("")
     let [username, setUsername] = useState("")
