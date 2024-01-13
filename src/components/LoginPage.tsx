@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { User } from "../providers/user";
+import { Firebase } from "../providers/user";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router";
 import LoginSignupHeader from "./LoginSignupHeader"; 
@@ -8,7 +8,7 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label"; 
 
 export const LoginPage = () => {
-    const { auth } = User.useContainer();
+    const { auth } = Firebase.useContainer();
 
     let [error, setError] = useState<Error | null>();
     let [email, setEmail] = useState("");

@@ -1,6 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { useNavigate } from "react-router"; 
-import { User } from "../providers/user";
+import { Firebase } from "../providers/user";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { ErrorDisplay } from './Error';
@@ -10,7 +10,7 @@ import { Input } from './ui/input';
 import { Label } from './ui/label'; 
 
 export const SignupPage = () => {
-    const { auth, firestore } = User.useContainer();
+    const { auth, firestore } = Firebase.useContainer();
     const navigate = useNavigate(); 
 
     let [email, setEmail] = useState("");
