@@ -7,6 +7,8 @@ import { Button } from "./ui/button";
 import { DropdownMenu } from "./ui/dropdown-menu";
 import { Firebase } from "../providers/user";
 import { signOut } from "@firebase/auth";
+import { UserBox } from "./UserBox";
+import { Profile } from "../providers/userProfile";
 
 const Header = () => {
 
@@ -45,9 +47,9 @@ const Header = () => {
 
       <div className="flex items-center">
         {user ? (
-          <Button onClick={() => signOut(auth)} style={{ backgroundColor: 'transparent', border: 'none', boxShadow: 'none', color: 'white' }}>
-            Log Out
-          </Button>
+          <Profile.Provider>
+            <UserBox />
+          </Profile.Provider>
         ) : (
           <div className="register" style={{ marginRight: '10px' }}>
             <a href="/login">Login</a> / <a href="/signup">Signup</a>

@@ -4,6 +4,8 @@
 import { useAuthState } from "react-firebase-hooks/auth"
 import { initFirebase } from "../firebase"
 import { createContainer } from "unstated-next"
+import { useDocument } from "react-firebase-hooks/firestore"
+import { doc } from "firebase/firestore"
 
 const { auth, firestore } = initFirebase()
 
@@ -11,7 +13,9 @@ const { auth, firestore } = initFirebase()
 export const useFirebase = () => {
     let [user, loading, error] = useAuthState(auth)
 
-    return { user, loading, error, auth, firestore }
+    return {
+        user, loading, error, auth, firestore
+    }
 }
 
 export const Firebase = createContainer(useFirebase)
