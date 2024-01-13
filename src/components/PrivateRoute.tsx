@@ -1,9 +1,9 @@
 import React, { PropsWithChildren } from "react"
-import { User } from "../providers/user"
+import { Firebase } from "../providers/user"
 import { LoginPage } from "./LoginPage"
 
 export const PrivateRoute = (props: PropsWithChildren) => {
-    let { user } = User.useContainer()
+    let { user } = Firebase.useContainer()
 
     return (
         user ?

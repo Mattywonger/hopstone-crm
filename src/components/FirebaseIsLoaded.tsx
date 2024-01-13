@@ -1,9 +1,10 @@
 import React, { PropsWithChildren } from "react"
-import { User } from "../providers/user"
+import { Firebase } from "../providers/user"
 import { LoadingPage } from "./LoadingPage"
 
-export const AuthIsLoaded = (props: PropsWithChildren) => {
-    const { loading, error } = User.useContainer()
+/* This component waits until firebase is loaded to display its children */
+export const FirebaseIsLoaded = (props: PropsWithChildren) => {
+    const { loading, error } = Firebase.useContainer()
 
     return (
         loading ?
