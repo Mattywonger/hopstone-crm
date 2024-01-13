@@ -14,7 +14,8 @@ export const SignupPage = () => {
     const navigate = useNavigate(); 
 
     let [email, setEmail] = useState("");
-    let [username, setUsername] = useState("");
+    let [firstName, setFirstName] = useState("");
+    let [lastName, setLastName] = useState("");
     let [password, setPassword] = useState("");
     let [confPassword, setConfPassword] = useState("");
     let [error, setError] = useState<Error>();
@@ -26,13 +27,22 @@ export const SignupPage = () => {
             setError(new Error('Passwords do not match'));
             return;
         }
-        if (username === "") {
-            setError(new Error('Username cannot be empty'));
+        if (firstName === "") {
+            setError(new Error('First name cannot be empty'));
+            return;
+        }
+
+        if (lastName === "") {
+            setError(new Error('Last name cannot be empty'));
             return;
         }
 
         createUserWithEmailAndPassword(auth, email, password).then(user => {
-            setDoc(doc(firestore, `users/${user.user?.uid}`), { "username": username })
+            setDoc(doc(firestore, `users/${user.user?.uid}`),
+                {
+                    "firstName": firstName,
+                    "lastName": lastName
+                })
                 .then(() => {
                     navigate("/login"); // Navigate to login page after successful signup
                 })
@@ -51,8 +61,11 @@ export const SignupPage = () => {
                         <Label htmlFor="email">Email</Label>
                         <Input id="email" type="text" onChange={event => setEmail(event.target.value)} />
                         <br />
-                        <Label htmlFor="username">Username</Label>
-                        <Input id="username" type="text" onChange={event => setUsername(event.target.value)} />
+                        <Label htmlFor="firstName">First Name</Label>
+                        <Input id="firstName" type="text" onChange={event => setFirstName(event.target.value)} />
+                        <br />
+                        <Label htmlFor="lastName">Last Name</Label>
+                        <Input id="lastName" type="text" onChange={event => setLastName(event.target.value)} />
                         <br />
                         <Label htmlFor="password">Password</Label>
                         <Input id="password" type="password" onChange={event => setPassword(event.target.value)} />
