@@ -1,4 +1,4 @@
-import { doc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { Firebase } from "./user";
 import { useDocument } from "react-firebase-hooks/firestore"
 import { createContainer } from "unstated-next";
@@ -11,7 +11,8 @@ type UserProfile = {
 export const useUserProfile = () => {
     const { user, firestore } = Firebase.useContainer();
 
-    const [snapshot, loading, error] = useDocument(doc(firestore, `users/${user?.uid}`))
+    const document = doc(firestore, `users/${user?.uid}`)
+    const [snapshot, loading, error] = useDocument(document)
 
     let profile: UserProfile | null | undefined
 
@@ -23,7 +24,11 @@ export const useUserProfile = () => {
         }
     }
 
-    return { loading, error, profile }
+    const updateProfile = (newProfile: UserProfile) => {
+        setDoc(document, newProfile).catch() // TODO add error handling
+    }
+
+    return { loading, error, profile, updateProfile }
 }
 
 export const Profile = createContainer(useUserProfile)
