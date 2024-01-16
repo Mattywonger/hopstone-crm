@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Profile } from "../providers/userProfile";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -8,10 +8,11 @@ import { LoadingPage } from "./LoadingPage";
 import { ErrorDisplay } from "./Error";
 
 export const UserPage = () => {
-    const { loading, profile, updateProfile } = Profile.useContainer();
-    const [error, setError] = useState<Error | null>(null);
+    const { loading, profile, error, updateProfile } = Profile.useContainer();
+    const [writeError, setError] = useState<Error | null>(null);
     const [firstName, setFirstName] = useState<string>("");
     const [lastName, setLastName] = useState<string>("");
+    const [writing, setWriting] = useState<boolean>(false);
 
     useEffect(() => {
         if (!loading) {
@@ -20,10 +21,16 @@ export const UserPage = () => {
         }
     }, [loading])
 
-    const handleSubmit = () => { updateProfile({ firstName: firstName, lastName: lastName }) }
+    const handleSubmit = (event: React.SyntheticEvent) => {
+        event.preventDefault()
+        setWriting(true);
+        updateProfile({ firstName: firstName, lastName: lastName })
+            .catch(setError)
+            .finally(() => { setWriting(false) })
+    }
 
     return (
-        loading ?
+        (loading || writing) ?
             <LoadingPage /> :
             <div>
                 <Header />
@@ -40,6 +47,7 @@ export const UserPage = () => {
                             <Button type="submit" variant="default" style={{ marginTop: '20px' }}>Update</Button>
                         </form>
                         {error && <ErrorDisplay error={error} />}
+                        {writeError && <ErrorDisplay error={writeError} />}
                     </div>
                 </div>
             </div>

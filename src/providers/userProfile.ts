@@ -25,7 +25,7 @@ export const useUserProfile = () => {
     }
 
     const updateProfile = (newProfile: UserProfile) => {
-        setDoc(document, newProfile).catch() // TODO add error handling
+        return setDoc(document, newProfile)
     }
 
     return { loading, error, profile, updateProfile }
