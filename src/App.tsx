@@ -5,6 +5,9 @@ import { Home } from './components/Home'
 import { LoginPage } from './components/LoginPage'
 import { PrivateRoute } from './components/PrivateRoute'
 import { UserPage } from './components/UserPage'
+import { Toaster } from "./components/ui/toaster";
+
+
 
 
 function App() {
@@ -16,6 +19,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/user" element={<PrivateRoute><UserPage /></PrivateRoute>} />
       </Routes>
+      <Toaster />
     </BrowserRouter>
 
   )
