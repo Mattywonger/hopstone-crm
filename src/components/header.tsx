@@ -1,8 +1,4 @@
 
-
-
-
-
 import { Button } from "./ui/button";
 import { DropdownMenu } from "./ui/dropdown-menu";
 import { Firebase } from "../providers/user";
