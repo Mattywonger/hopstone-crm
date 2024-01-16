@@ -3,6 +3,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { SignupPage } from './components/SignupPage'
 import { Home } from './components/Home'
 import { LoginPage } from './components/LoginPage'
+import { Toaster } from "./components/ui/toaster";
+import { useToast } from "./components/ui/use-toast";
+
+
 
 
 function App() {
@@ -13,6 +17,7 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
       </Routes>
+      <Toaster />
     </BrowserRouter>
 
   )

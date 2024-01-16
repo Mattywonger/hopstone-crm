@@ -6,6 +6,8 @@ import LoginSignupHeader from "./LoginSignupHeader";
 import { Button } from "./ui/button"; 
 import { Input } from "./ui/input"; 
 import { Label } from "./ui/label"; 
+import { toast } from "./ui/use-toast";
+
 
 export const LoginPage = () => {
     const { auth } = Firebase.useContainer();
@@ -18,13 +20,40 @@ export const LoginPage = () => {
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
+    
+        // Check for empty email
+        if (!email) {
+            toast({
+                variant: "destructive",
+                title: "Sorry! Email field cannot be empty! 🙁",
+                description: `Please enter the email for your account.`,
+            });
+            return;
+        }
+    
+        // Check for empty password
+        if (!password) {
+            toast({
+                variant: "destructive",
+                title: "Sorry! Password field cannot be empty! 🙁",
+                description: `Please enter the password for your account.`,
+            });
+            return;
+        }
+        
+        // Proceed with Firebase sign-in
         signInWithEmailAndPassword(auth, email, password)
             .then(() => navigate("/"))
             .catch((error: Error) => {
+                toast({
+                    variant: "destructive",
+                    title: "Login Failed",
+                    description: error.message,
+                });
                 setError(error);
             });
     }
-
+    
     return (
         <div>
             <LoginSignupHeader />
