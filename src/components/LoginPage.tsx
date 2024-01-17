@@ -13,7 +13,6 @@ import { FirebaseError } from "firebase/app";
 export const LoginPage = () => {
     const { auth } = Firebase.useContainer();
 
-    let [error, setError] = useState<Error | null>();
     let [email, setEmail] = useState("");
     let [password, setPassword] = useState("");
     let [emailError, setEmailError] = useState(false);
@@ -90,10 +89,7 @@ export const LoginPage = () => {
                         <br />
                         <Button type="submit" variant="default" style={{ marginTop: '20px' }}>Submit</Button>
                     </form>
-                    {error ?
-                        <p>An error occurred: {error.message}</p> :
-                        <p></p>
-                    }
+                    
                 </div>
             </div>
         </div>

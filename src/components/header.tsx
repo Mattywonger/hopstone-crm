@@ -1,14 +1,11 @@
-
-import { Button } from "./ui/button";
 import { DropdownMenu } from "./ui/dropdown-menu";
 import { Firebase } from "../providers/user";
-import { signOut } from "@firebase/auth";
 import { UserBox } from "./UserBox";
 import { Profile } from "../providers/userProfile";
 
 const Header = () => {
 
-  let { auth, user } = Firebase.useContainer();
+  let { user } = Firebase.useContainer();
 
   const handleLogoClick = () => {
     window.location.href = '/';

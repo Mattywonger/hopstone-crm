@@ -3,7 +3,6 @@ import { useNavigate } from "react-router";
 import { Firebase } from "../providers/user";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import { ErrorDisplay } from './Error';
 import LoginSignupHeader from './LoginSignupHeader'; 
 import { Button } from './ui/button'; 
 import { Input } from './ui/input'; 
@@ -19,7 +18,6 @@ export const SignupPage = () => {
     let [lastName, setLastName] = useState("");
     let [password, setPassword] = useState("");
     let [confPassword, setConfPassword] = useState("");
-    let [error, setError] = useState<Error>();
     let [emailError, setEmailError] = useState(false);
     let [firstNameError, setFirstNameError] = useState(false);
     let [lastNameError, setLastNameError] = useState(false);
@@ -35,12 +33,12 @@ export const SignupPage = () => {
         setConfPasswordError(false);
         let hasError = false;
 
-        
         if (password !== confPassword) {
             setConfPasswordError(true);
             setPasswordError(true);
             hasError = true;
         }
+
         if (firstName === "") {
             setFirstNameError(true);
             hasError = true;
@@ -82,8 +80,6 @@ export const SignupPage = () => {
         
     }
         
-
-   
     createUserWithEmailAndPassword(auth, email, password).then(user => {
         setDoc(doc(firestore, `users/${user.user?.uid}`), {
             "firstName": firstName,
@@ -120,7 +116,6 @@ const inputStyle = (error: boolean) => ({
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'calc(100vh - 70px)' }}>
                 <div>
                     <p style={{ textAlign: 'center', fontWeight: 'bold', color: 'black', fontSize: '1.60rem', marginBottom: '35px' }}>Sign Up</p>
-                    {error && <ErrorDisplay error={error} />}
                     <form onSubmit={handleSubmit}>
                         <Label htmlFor="email">Email</Label>
                         <Input id="email" type="text" style={inputStyle(emailError)} onChange={(event) => setEmail(event.target.value)} />
