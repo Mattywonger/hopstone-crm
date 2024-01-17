@@ -1,7 +1,8 @@
-import { DropdownMenu } from "./ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Firebase } from "../providers/user";
 import { UserBox } from "./UserBox";
 import { Profile } from "../providers/userProfile";
+import { Link } from "react-router-dom";
 
 const Header = () => {
 
@@ -39,22 +40,33 @@ const Header = () => {
       </div>
 
       <div className="flex items-center">
-        {user ? (
-          <Profile.Provider>
-            <UserBox />
-          </Profile.Provider>
+      {user ? (
+          <>
+            <Profile.Provider>
+              <UserBox />
+            </Profile.Provider>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div className="profile">
+                  <img src="/unknown-user.png" alt="User Icon" style={{ maxWidth: '50px', maxHeight: '50px', filter: 'invert(100%)' }} />
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem asChild>
+                  <Link to="/user">Update User Profile</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/users">All Users</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </>
         ) : (
           <div className="register" style={{ marginRight: '10px' }}>
             <a href="/login">Login</a> / <a href="/signup">Signup</a>
           </div>
         )}
-
-        <DropdownMenu>
-          <div className="profile">
-            <img src="/unknown-user.png" alt="User Icon" style={{ maxWidth: '50px', maxHeight: '50px', filter: 'invert(100%)' }} />
-          </div>
-          {/* Dropdown menu items can be added here */}
-        </DropdownMenu>
       </div>
     </header>
   );

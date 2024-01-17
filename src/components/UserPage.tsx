@@ -6,6 +6,7 @@ import { Label } from "./ui/label";
 import Header from "./header";
 import { LoadingPage } from "./LoadingPage";
 import { ErrorDisplay } from "./Error";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 export const UserPage = () => {
     const { loading, profile, error, updateProfile } = Profile.useContainer();
@@ -13,6 +14,7 @@ export const UserPage = () => {
     const [firstName, setFirstName] = useState<string>("");
     const [lastName, setLastName] = useState<string>("");
     const [writing, setWriting] = useState<boolean>(false);
+    const navigate = useNavigate(); // Create an instance of navigate
 
     useEffect(() => {
         if (!loading) {
@@ -22,11 +24,16 @@ export const UserPage = () => {
     }, [loading])
 
     const handleSubmit = (event: React.SyntheticEvent) => {
-        event.preventDefault()
+        event.preventDefault();
         setWriting(true);
         updateProfile({ firstName: firstName, lastName: lastName })
+            .then(() => {
+                navigate("/"); // Navigate to home page after successful update
+            })
             .catch(setError)
-            .finally(() => { setWriting(false) })
+            .finally(() => {
+                setWriting(false);
+            });
     }
 
     return (
