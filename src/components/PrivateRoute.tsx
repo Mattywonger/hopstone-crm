@@ -2,7 +2,6 @@ import React from "react"
 import { Firebase } from "../providers/user"
 import { LoginPage } from "./LoginPage"
 import { Profile } from "../providers/userProfile"
-import { Route } from "react-router"
 
 export const PrivateRoute = (props: PrivateRouteProps) => {
     let { user } = Firebase.useContainer()

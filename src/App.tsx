@@ -6,6 +6,7 @@ import { LoginPage } from './components/LoginPage'
 import { PrivateRoute } from './components/PrivateRoute'
 import { UserPage } from './components/UserPage'
 import { Toaster } from "./components/ui/toaster";
+import { Users } from './components/Users'
 
 
 
@@ -18,6 +19,7 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/user" element={<PrivateRoute><UserPage /></PrivateRoute>} />
+        <Route path="/users" element={<PrivateRoute><Users /></PrivateRoute>} />
       </Routes>
       <Toaster />
     </BrowserRouter>
