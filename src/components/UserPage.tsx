@@ -6,7 +6,7 @@ import { Label } from "./ui/label";
 import Header from "./header";
 import { LoadingPage } from "./LoadingPage";
 import { ErrorDisplay } from "./Error";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom"; 
 
 export const UserPage = () => {
     const { loading, profile, error, updateProfile } = Profile.useContainer();
@@ -14,7 +14,7 @@ export const UserPage = () => {
     const [firstName, setFirstName] = useState<string>("");
     const [lastName, setLastName] = useState<string>("");
     const [writing, setWriting] = useState<boolean>(false);
-    const navigate = useNavigate(); // Create an instance of navigate
+    const navigate = useNavigate(); 
 
     useEffect(() => {
         if (!loading) {
