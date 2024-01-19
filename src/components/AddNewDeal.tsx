@@ -1,4 +1,5 @@
 import React from 'react';
+import Header from './header';
 
 const labelStyle: React.CSSProperties = {
     color: 'grey',
@@ -30,18 +31,22 @@ const buttonStyle = {
   
 };
 
+
+
 const AddNewDeal = () => {
   
     return (
-        <div style={{ background: '#f0f0f0', padding: '40px', boxSizing: 'border-box' }}>
-          <div style={{
-            maxWidth: '700px',
-            margin: '0 auto',
-            background: 'white',
-            padding: '40px',
-            borderRadius: '8px',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
-          }}>
+      <>
+      <Header />
+      <div style={{ background: '#f0f0f0', padding: '40px', boxSizing: 'border-box', paddingTop: '100px' }}> {/* Adjusted padding to accommodate fixed header */}
+        <div style={{
+          maxWidth: '700px',
+          margin: '0 auto',
+          background: 'white',
+          padding: '40px',
+          borderRadius: '8px',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
+        }}>
           <h2 style={{ color: '#333', margin: '0 0 30px', fontWeight: 'bold', fontSize: '30px' }}>Deals: Add New</h2>
           <form className="add-deal-form" style={{ display: 'grid', gap: '24px' }}>
             <label style={labelStyle}>
@@ -144,13 +149,12 @@ const AddNewDeal = () => {
               <input type="file" name="additionalFiles" style={inputStyle} multiple />
             </label>
 
-            <button type="submit" style={buttonStyle}>Add</button>
+            <button type="submit" style={buttonStyle}>Save</button>
           </form>
-        </div>
+          </div>
       </div>
-    );
-    
-
+    </>
+  );
 }
 
 export default AddNewDeal;
