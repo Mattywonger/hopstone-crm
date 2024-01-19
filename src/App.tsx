@@ -7,6 +7,7 @@ import { PrivateRoute } from './components/PrivateRoute'
 import { UserPage } from './components/UserPage'
 import { Toaster } from "./components/ui/toaster";
 import { Users } from './components/Users'
+import AddNewDeal from './components/AddNewDeal'
 
 
 
@@ -20,6 +21,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/user" element={<PrivateRoute><UserPage /></PrivateRoute>} />
         <Route path="/users" element={<PrivateRoute><Users /></PrivateRoute>} />
+        <Route path="/add-new-deal" Component={AddNewDeal} />
       </Routes>
       <Toaster />
     </BrowserRouter>
