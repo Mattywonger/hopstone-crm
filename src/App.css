@@ -59,4 +59,12 @@
   
 }
 
+.droppable-container {
+  width: 100%; /* or any specific width */
+  min-height: 500px; /* adjust the height as needed */
+  margin: 10px;
+  padding: 10px;
+  /* Add other styling as needed */
+}
+
 

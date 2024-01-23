@@ -100,7 +100,7 @@ const Home: React.FC<HomeProps> = ({ user }) => {
   ]);
 
   const onDragEnd = (result: DropResult) => {
-    if (!result.destination) return; // Dropped outside the list
+    if (!result.destination) return;
 
     const updatedTasks = Array.from(tasks);
     const [movedTask] = updatedTasks.splice(result.source.index, 1);
@@ -109,6 +109,12 @@ const Home: React.FC<HomeProps> = ({ user }) => {
     setTasks(updatedTasks);
   };
 
+
+      tasks.map((task) => {
+        console.log(task.id);
+       
+      });
+    
   
 
   return (
@@ -136,23 +142,30 @@ const Home: React.FC<HomeProps> = ({ user }) => {
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="tasksList">
           {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef}>
-              {tasks.map((task, index) => {
-                
-                return (
-                  <Draggable key={task.id} draggableId={task.id} index={index}>
-                    {(provided) => (
-                      <div
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        ref={provided.innerRef}
-                      >
-                        {task.content}
-                      </div>
-                    )}
-                  </Draggable>
-                );
-              })}
+            <div {...provided.droppableProps} ref={provided.innerRef} className="droppable-container">
+              {tasks.map((task, index) => (
+                <Draggable key={task.id} draggableId={task.id} index={index}>
+                  {(provided) => (
+                    <button
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    ref={provided.innerRef}
+                    style={{
+                      padding: '10px',
+                      margin: '5px',
+                      backgroundColor: '#f0f0f0',
+                      border: '1px solid #ddd',
+                      borderRadius: '5px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    {task.content}
+                  </button>
+                      
+                    
+                  )}
+                </Draggable>
+              ))}
               {provided.placeholder}
             </div>
           )}
@@ -163,5 +176,3 @@ const Home: React.FC<HomeProps> = ({ user }) => {
 };
 
 export default Home;
-
-
