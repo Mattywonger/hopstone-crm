@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from './header';
 
+
 const labelStyle: React.CSSProperties = {
     color: 'grey',
     display: 'flex',
@@ -38,6 +39,7 @@ const AddNewDeal = () => {
     return (
       <>
       <Header />
+      
       <div style={{ background: '#f0f0f0', padding: '40px', boxSizing: 'border-box', paddingTop: '100px' }}> {/* Adjusted padding to accommodate fixed header */}
         <div style={{
           maxWidth: '700px',
