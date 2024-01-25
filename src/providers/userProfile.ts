@@ -5,8 +5,11 @@ import { createContainer } from "unstated-next";
 
 type UserProfile = {
     firstName: string,
-    lastName: string
+    lastName: string,
+    profilePic: string
 }
+
+const defaultProfilePic = "/unknown-user.png";
 
 export const useUserProfile = () => {
     const { user, firestore } = Firebase.useContainer();
@@ -20,11 +23,12 @@ export const useUserProfile = () => {
         const data = snapshot.data()
         profile = {
             firstName: data?.firstName,
-            lastName: data?.lastName
+            lastName: data?.lastName,
+            profilePic: data?.profilePic || defaultProfilePic
         }
     }
 
-    const updateProfile = (newProfile: UserProfile) => {
+    const updateProfile = (newProfile: Partial<UserProfile>) => {
         return setDoc(document, newProfile)
     }
 
