@@ -6,9 +6,10 @@ import { Label } from "./ui/label";
 import Header from "./header";
 import { LoadingPage } from "./LoadingPage";
 import { ErrorDisplay } from "./Error";
+import { ProfilePicture } from "./ProfilePicture";
 
 export const UserPage = () => {
-    const { loading, profile, error, updateProfile } = Profile.useContainer();
+    const { loading, profile, error, updateProfile, updateProfilePic } = Profile.useContainer();
     const [writeError, setError] = useState<Error | null>(null);
     const [firstName, setFirstName] = useState<string>("");
     const [lastName, setLastName] = useState<string>("");
@@ -20,6 +21,19 @@ export const UserPage = () => {
             setLastName(profile?.lastName || "");
         }
     }, [loading])
+
+    const uploadProfilePic = (event: React.ChangeEvent<HTMLInputElement>) => {
+        event.preventDefault()
+        setWriting(true);
+
+        if (!event.target.files) {
+            //TODO: make sure these update simultaneously
+            setError(_ => Error("No picture provided"))
+            setWriting(_ => false)
+        } else {
+            updateProfilePic(event.target.files[0]).catch(setError).finally(() => { setWriting(false) })
+        }
+    }
 
     const handleSubmit = (event: React.SyntheticEvent) => {
         event.preventDefault()
@@ -37,6 +51,10 @@ export const UserPage = () => {
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
                     <div>
                         <p style={{ textAlign: 'center', fontWeight: 'bold', color: 'black', fontSize: '1.60rem', marginBottom: '35px' }}>Profile</p>
+                        <ProfilePicture />
+                        <form>
+                            <Input type="file" onChange={uploadProfilePic} />
+                        </form>
                         <form onSubmit={handleSubmit}>
                             <Label htmlFor="firstName">First Name</Label>
                             <Input id="firstName" type="text" value={firstName} onChange={event => setFirstName(event.target.value)} />
