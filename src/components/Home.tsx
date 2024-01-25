@@ -82,6 +82,7 @@ import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautif
 import { Link } from 'react-router-dom';
 import { Button } from './ui/button';
 import Header from './header';
+import KanbanBoard from './kanban'
 
 interface Task {
   id: string;
@@ -138,39 +139,8 @@ const Home: React.FC<HomeProps> = ({ user }) => {
           </Link>
         </div>
       )}
-
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="tasksList">
-          {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef} className="droppable-container">
-              {tasks.map((task, index) => (
-                <Draggable key={task.id} draggableId={task.id} index={index}>
-                  {(provided) => (
-                    <button
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    ref={provided.innerRef}
-                    style={{
-                      padding: '10px',
-                      margin: '5px',
-                      backgroundColor: '#f0f0f0',
-                      border: '1px solid #ddd',
-                      borderRadius: '5px',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    {task.content}
-                  </button>
-                      
-                    
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+  <KanbanBoard />
+   
     </div>
   );
 };
