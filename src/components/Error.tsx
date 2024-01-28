@@ -1,6 +1,6 @@
-export const ErrorDisplay = (props: { error: Error }) => (
+export const ErrorDisplay = (props: { error: Error | undefined }) => (
     <div>
         <h3>An error has occured</h3>
-        <p>{props.error.message}</p>
+        <p>{props.error?.message}</p>
     </div>
 )

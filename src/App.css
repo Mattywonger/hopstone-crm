@@ -40,3 +40,31 @@
 .read-the-docs {
   color: #888;
 }
+
+.top-right-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 10rem;
+  margin-right: 6rem;
+}
+
+.add-new-button {
+  padding: 0.5rem 1rem;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  
+}
+
+.droppable-container {
+  width: 100%; /* or any specific width */
+  min-height: 500px; /* adjust the height as needed */
+  margin: 10px;
+  padding: 10px;
+  /* Add other styling as needed */
+}
+
+

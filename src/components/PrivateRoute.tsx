@@ -1,13 +1,16 @@
-import React, { PropsWithChildren } from "react"
+import React from "react"
 import { Firebase } from "../providers/user"
 import { LoginPage } from "./LoginPage"
+import { Profile } from "../providers/userProfile"
 
-export const PrivateRoute = (props: PropsWithChildren) => {
+export const PrivateRoute = (props: PrivateRouteProps) => {
     let { user } = Firebase.useContainer()
 
     return (
-        user ?
-            <React.Fragment> {props.children} </React.Fragment> :
-            <LoginPage />
+        user ? <Profile.Provider>{props.children}</Profile.Provider> : <LoginPage />
     )
+}
+
+export declare interface PrivateRouteProps {
+    children: React.ReactNode,
 }
