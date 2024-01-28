@@ -94,21 +94,12 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ user }) => {
-  const [tasks, setTasks] = useState<Task[]>([
+  const [tasks] = useState<Task[]>([
     { id: 'task-1', content: 'Task 1' },
     { id: 'task-2', content: 'Task 2' },
     { id: 'task-3', content: 'Task 3' },
   ]);
 
-  const onDragEnd = (result: DropResult) => {
-    if (!result.destination) return;
-
-    const updatedTasks = Array.from(tasks);
-    const [movedTask] = updatedTasks.splice(result.source.index, 1);
-    updatedTasks.splice(result.destination.index, 0, movedTask);
-
-    setTasks(updatedTasks);
-  };
 
 
       tasks.map((task) => {
