@@ -78,7 +78,7 @@
 // };
 
 import React, { useState } from 'react';
-import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
+import { DropResult } from 'react-beautiful-dnd';
 import { Link } from 'react-router-dom';
 import { Button } from './ui/button';
 import Header from './header';

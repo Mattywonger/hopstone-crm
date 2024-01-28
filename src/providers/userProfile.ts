@@ -1,4 +1,4 @@
-import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { Firebase } from "./user";
 import { useDocument } from "react-firebase-hooks/firestore"
 import { createContainer } from "unstated-next";
