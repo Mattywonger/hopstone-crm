@@ -83,38 +83,14 @@ import { Link } from 'react-router-dom';
 import { Button } from './ui/button';
 import Header from './header';
 import KanbanBoard from './kanban'
+import { Firebase } from '../providers/user';
 
 interface Task {
   id: string;
   content: string;
 }
-
-interface HomeProps {
-  user: any; // Replace 'any' with the correct type for your user
-}
-
-const Home: React.FC<HomeProps> = ({ user }) => {
-  const [tasks, setTasks] = useState<Task[]>([
-    { id: 'task-1', content: 'Task 1' },
-    { id: 'task-2', content: 'Task 2' },
-    { id: 'task-3', content: 'Task 3' },
-  ]);
-
-  const onDragEnd = (result: DropResult) => {
-    if (!result.destination) return;
-
-    const updatedTasks = Array.from(tasks);
-    const [movedTask] = updatedTasks.splice(result.source.index, 1);
-    updatedTasks.splice(result.destination.index, 0, movedTask);
-
-    setTasks(updatedTasks);
-  };
-
-
-      tasks.map((task) => {
-        console.log(task.id);
-       
-      });
+export const Home = () => {
+  const { user } = Firebase.useContainer(); 
     
   
 
