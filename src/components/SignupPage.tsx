@@ -8,6 +8,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input'; 
 import { Label } from './ui/label'; 
 import { toast } from './ui/use-toast';
+import { defaultProfilePic } from '../providers/userProfile';
 
 export const SignupPage = () => {
     const { auth, firestore } = Firebase.useContainer();
@@ -83,7 +84,8 @@ export const SignupPage = () => {
     createUserWithEmailAndPassword(auth, email, password).then(user => {
         setDoc(doc(firestore, `users/${user.user?.uid}`), {
             "firstName": firstName,
-            "lastName": lastName
+            "lastName": lastName,
+            "profilePic": defaultProfilePic
         })
         .then(() => {
             navigate("/login"); 
