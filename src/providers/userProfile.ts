@@ -10,7 +10,7 @@ type UserProfile = {
     profilePic: string
 }
 
-const defaultProfilePic = "/unknown-user.png";
+export const defaultProfilePic = "/unknown-user.png";
 
 export const useUserProfile = () => {
     const { user, firestore, storage } = Firebase.useContainer();
