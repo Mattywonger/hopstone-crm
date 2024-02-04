@@ -4,6 +4,7 @@ import { collection, QueryDocumentSnapshot } from "@firebase/firestore";
 import { LoadingPage } from "./LoadingPage";
 import { ErrorDisplay } from "./Error";
 import Header from "./header";
+import { defaultProfilePic } from "../providers/userProfile"
 
 
 
@@ -46,6 +47,9 @@ export const Users = () => {
                             <tbody>
                                 {snapshot?.docs.sort(sortUsersByLastName).map((doc, index, array) => (
                                     <tr key={doc.id}>
+                                        <td>
+                                            <img src={doc.data().profilePic || defaultProfilePic} />
+                                        </td>
                                         <td style={{ borderBottom: array.length - 1 === index ? 'none' : '1px solid #ddd', padding: '8px' }}>
                                             {doc.data().firstName}
                                         </td>
