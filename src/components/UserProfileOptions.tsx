@@ -46,7 +46,7 @@ const UserProfileOptions = () => {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <>{user ? <Profile.Provider><ProfilePicture /></Profile.Provider> : <LoadingPage />}</>
+            <div>{user ? <Profile.Provider><ProfilePicture /></Profile.Provider> : <p>Logged Out</p>}</div>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             {user ? (
