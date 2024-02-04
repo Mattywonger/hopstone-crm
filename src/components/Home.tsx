@@ -77,60 +77,42 @@
 //   );
 // };
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from './ui/button';
 import Header from './header';
 import KanbanBoard from './kanban'
-
-interface Task {
-  id: string;
-  content: string;
-}
 
 interface HomeProps {
   user: any; // Replace 'any' with the correct type for your user
 }
 
 const Home: React.FC<HomeProps> = ({ user }) => {
-  const [tasks] = useState<Task[]>([
-    { id: 'task-1', content: 'Task 1' },
-    { id: 'task-2', content: 'Task 2' },
-    { id: 'task-3', content: 'Task 3' },
-  ]);
-
-
-
-      tasks.map((task) => {
-        console.log(task.id);
-       
-      });
-    
   
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <Header />
-      {user && (
-        <div className="top-right-button">
-          <Link to="/add-new-deal">
-            <Button style={{
-              backgroundColor: '#3391CC',
-              color: 'white',
-              border: 'none',
-              padding: '10px 15px',
-              borderRadius: '5px',
-              fontSize: '16px',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              boxShadow: 'none',
-              textDecoration: 'none',
-            }}>+ Add New</Button>
-          </Link>
-        </div>
-      )}
-  <KanbanBoard />
-   
+      <div className="mt-16"> {/* Adjust the margin as needed to fit the header */}
+        {user && (
+          <div className="top-right-button">
+            <Link to="/add-new-deal">
+              <Button style={{
+                backgroundColor: '#3391CC',
+                color: 'white',
+                border: 'none',
+                padding: '10px 15px',
+                borderRadius: '5px',
+                fontSize: '16px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                boxShadow: 'none',
+                textDecoration: 'none',
+              }}>+ Add New</Button>
+            </Link>
+          </div>
+        )}
+        <KanbanBoard />
+      </div>
     </div>
   );
 };
