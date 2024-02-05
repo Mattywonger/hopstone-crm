@@ -5,7 +5,6 @@ import { Profile } from "../providers/userProfile";
 import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { ProfilePicture } from "./ProfilePicture";
-import { LoadingPage } from "./LoadingPage";
 
 const UserProfileOptions = () => {
   const { user, auth } = Firebase.useContainer();
@@ -46,7 +45,7 @@ const UserProfileOptions = () => {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <>{user ? <Profile.Provider><ProfilePicture /></Profile.Provider> : <LoadingPage />}</>
+            <div>{user ? <Profile.Provider><ProfilePicture /></Profile.Provider> : <p>Logged Out</p>}</div>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             {user ? (

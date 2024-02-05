@@ -77,46 +77,43 @@
 //   );
 // };
 
-import React, { useState } from 'react';
-import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from './ui/button';
 import Header from './header';
 import KanbanBoard from './kanban'
 import { Firebase } from '../providers/user';
-
-interface Task {
-  id: string;
-  content: string;
+   
+interface HomeProps {
+  user: any; // Replace 'any' with the correct type for your user
 }
-export const Home = () => {
-  const { user } = Firebase.useContainer(); 
-    
-  
 
+const Home: React.FC<HomeProps> = ({ user }) => {
+  
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <Header />
-      {user && (
-        <div className="top-right-button">
-          <Link to="/add-new-deal">
-            <Button style={{
-              backgroundColor: '#3391CC',
-              color: 'white',
-              border: 'none',
-              padding: '10px 15px',
-              borderRadius: '5px',
-              fontSize: '16px',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              boxShadow: 'none',
-              textDecoration: 'none',
-            }}>+ Add New</Button>
-          </Link>
-        </div>
-      )}
-  <KanbanBoard />
-   
+      <div className="mt-16"> {/* Adjust the margin as needed to fit the header */}
+        {user && (
+          <div className="top-right-button">
+            <Link to="/add-new-deal">
+              <Button style={{
+                backgroundColor: '#3391CC',
+                color: 'white',
+                border: 'none',
+                padding: '10px 15px',
+                borderRadius: '5px',
+                fontSize: '16px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                boxShadow: 'none',
+                textDecoration: 'none',
+              }}>+ Add New</Button>
+            </Link>
+          </div>
+        )}
+        <KanbanBoard />
+      </div>
     </div>
   );
 };

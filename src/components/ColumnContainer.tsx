@@ -10,7 +10,6 @@ interface Props {
   column: Column;
   deleteColumn: (id: Id) => void;
   updateColumn: (id: Id, title: string) => void;
-
   createTask: (columnId: Id) => void;
   updateTask: (id: Id, content: string) => void;
   deleteTask: (id: Id) => void;
@@ -59,17 +58,15 @@ function ColumnContainer({
         ref={setNodeRef}
         style={style}
         className="
-      bg-columnBackgroundColor
-      opacity-40
-      border-2
-      border-pink-500
-      w-[350px]
-      h-[500px]
-      max-h-[500px]
-      rounded-md
-      flex
-      flex-col
-      "
+          bg-columnBackgroundColor
+          opacity-40
+          border-2
+          border-pink-500
+          w-[180px]
+          rounded-md
+          flex
+          flex-col
+        "
       ></div>
     );
   }
@@ -79,57 +76,53 @@ function ColumnContainer({
       ref={setNodeRef}
       style={style}
       className="
-  bg-columnBackgroundColor
-  w-[350px]
-  h-[500px]
-  max-h-[500px]
-  rounded-md
-  flex
-  flex-col
-  "
+        bg-columnBackgroundColor
+        w-[180px]
+        rounded-md
+        flex
+        flex-col
+        mb-4
+      "
     >
       {/* Column title */}
       <div
         {...attributes}
         {...listeners}
-        onClick={() => {
-          setEditMode(true);
-        }}
+        onClick={() => setEditMode(true)}
         className="
-      bg-mainBackgroundColor
-      text-md
-      h-[60px]
-      cursor-grab
-      rounded-md
-      rounded-b-none
-      p-3
-      font-bold
-      border-columnBackgroundColor
-      border-4
-      flex
-      items-center
-      justify-between
-      "
+          bg-mainBackgroundColor
+          text-md
+          h-[50px]
+          cursor-grab
+          rounded-t-md
+          p-2
+          font-bold
+          border-b
+          border-columnBackgroundColor
+          flex
+          items-center
+          justify-between
+        "
       >
         <div className="flex gap-2">
           <div
             className="
-        flex
-        justify-center
-        items-center
-        bg-columnBackgroundColor
-        px-2
-        py-1
-        text-sm
-        rounded-full
-        "
+              flex
+              justify-center
+              items-center
+              bg-columnBackgroundColor
+              px-2
+              py-1
+              text-sm
+              rounded-full
+            "
           >
-            0
+            {tasks.length}
           </div>
           {!editMode && column.title}
           {editMode && (
             <input
-              className="bg-black focus:border-rose-500 border rounded outline-none px-2"
+              className="bg-white focus:border-rose-500 border rounded outline-none px-2"
               value={column.title}
               onChange={(e) => updateColumn(column.id, e.target.value)}
               autoFocus
@@ -137,8 +130,9 @@ function ColumnContainer({
                 setEditMode(false);
               }}
               onKeyDown={(e) => {
-                if (e.key !== "Enter") return;
-                setEditMode(false);
+                if (e.key === "Enter") {
+                  setEditMode(false);
+                }
               }}
             />
           )}
@@ -148,20 +142,19 @@ function ColumnContainer({
             deleteColumn(column.id);
           }}
           className="
-        stroke-gray-500
-        hover:stroke-white
-        hover:bg-columnBackgroundColor
-        rounded
-        px-1
-        py-2
-        "
+            text-gray-500
+            hover:text-white
+            hover:bg-columnBackgroundColor
+            rounded
+            p-1
+          "
         >
           <TrashIcon />
         </button>
       </div>
 
       {/* Column task container */}
-      <div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto">
+      <div className="flex-grow flex-col p-2">
         <SortableContext items={tasksIds}>
           {tasks.map((task) => (
             <TaskCard
@@ -173,9 +166,23 @@ function ColumnContainer({
           ))}
         </SortableContext>
       </div>
+
       {/* Column footer */}
       <button
-        className="flex gap-2 items-center border-columnBackgroundColor border-2 rounded-md p-4 border-x-columnBackgroundColor hover:bg-mainBackgroundColor hover:text-rose-500 active:bg-black"
+        className="
+          flex
+          items-center
+          justify-center
+          border-columnBackgroundColor
+          border-2
+          rounded-md
+          p-2
+          border-x-columnBackgroundColor
+          hover:bg-mainBackgroundColor
+          hover:text-rose-500
+          active:bg-black
+          mt-2
+        "
         onClick={() => {
           createTask(column.id);
         }}
