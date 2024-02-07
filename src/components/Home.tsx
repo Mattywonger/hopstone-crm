@@ -82,7 +82,6 @@ import { Link } from 'react-router-dom';
 import { Button } from './ui/button';
 import Header from './header';
 import KanbanBoard from './kanban'
-import { Firebase } from '../providers/user';
    
 interface HomeProps {
   user: any; // Replace 'any' with the correct type for your user

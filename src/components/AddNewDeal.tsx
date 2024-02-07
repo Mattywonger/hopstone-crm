@@ -6,6 +6,7 @@ import { ErrorDisplay } from './Error';
 import { ref, uploadBytes } from 'firebase/storage';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { LoadingPage } from './LoadingPage';
+import { useCollection } from 'react-firebase-hooks/firestore';
 
 
 const labelStyle: React.CSSProperties = {
@@ -40,6 +41,8 @@ const buttonStyle = {
 
 const AddNewDeal = () => {
   const { firestore, storage } = Firebase.useContainer()
+
+  const [pods, loading, podError] = useCollection(collection(firestore, 'pods'))
 
   const [error, setError] = useState<Error>()
 
@@ -123,7 +126,7 @@ const AddNewDeal = () => {
 
       {error && <ErrorDisplay error={error} />}
 
-      {writing ? <LoadingPage /> :
+      {writing || loading ? <LoadingPage /> :
         <div style={{ background: '#f0f0f0', padding: '40px', boxSizing: 'border-box', paddingTop: '100px' }}> {/* Adjusted padding to accommodate fixed header */}
           <div style={{
             maxWidth: '700px',
@@ -211,13 +214,13 @@ const AddNewDeal = () => {
               <label style={labelStyle}>
                 Pod
                 <select name="pod" style={inputStyle} onChange={event => setPod(event.target.value)}>
-                  <option value="">Select...</option>
-                  <option value="">Aaron's Pod</option>
-                  <option value="active">Aneesha's Pod</option>
-                  <option value="rejected">HopStone Capital</option>
-                  <option value="postInvestment">Joseph's Pod</option>
-                  <option value="postInvestment">Pano's Pod</option>
-                  <option value="postInvestment">Rachel's Pod</option>
+                  {
+                    pods?.docs.map(pod =>
+                      <option>
+                        {pod.id}
+                      </option>
+                    )
+                  }
                 </select>
               </label>
 

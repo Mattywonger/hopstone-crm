@@ -9,6 +9,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Button } from "./ui/button";
 import { addDoc, arrayRemove, arrayUnion, deleteDoc, deleteField, doc, DocumentReference, updateDoc } from "firebase/firestore";
 import { useState } from "react";
+import usePods from "../lib/pods";
 
 
 
@@ -16,8 +17,7 @@ export const Users = () => {
     const { firestore } = Firebase.useContainer();
     const [snapshot, loadingUsers, error] = useCollection(collection(firestore, `users`));
     const podCollection = collection(firestore, 'pods')
-    const [pods, loadingPods, podError] = useCollection(podCollection)
-    const [createPodError, setCreatePodError] = useState<Error>()
+    const [pods, loadingPods, podLoadError] = useCollection(podCollection)
 
     // Function to sort users by last name with explicit types
     const sortUsersByLastName = (a: QueryDocumentSnapshot, b: QueryDocumentSnapshot) => {
@@ -32,68 +32,17 @@ export const Users = () => {
         return 0;
     };
 
-    const makePodLeader = (user: DocumentReference) => {
-
-        // TODO: Should have a consistent system for referncing other documents
-        // IF not using firestore references can unchain
-
-        addDoc(podCollection, {
-            leader: user,
-            members: []
-        }).then(pod =>
-            updateDoc(user, { pod: pod }))
-            .catch(setCreatePodError)
-    }
-
-    // Careful: this takes the UID of the pod leader
-    const deletePod = (user: QueryDocumentSnapshot) => {
-        const pod = pods?.docs.find(doc => doc.id == user.data().pod.id)
-
-        Promise.all([
-            updateDoc(user.ref, { pod: deleteField() }),
-            pod?.data().members.map((member: DocumentReference) => (
-                updateDoc(member, { pod: deleteField() })
-            )),
-            (pod != undefined && deleteDoc(pod.ref))
-        ]).catch(setCreatePodError)
-    }
-
-    const podLeader = (pod: DocumentReference) => {
-        const leaderRef = pods?.docs.find(doc => doc.id === pod.id)?.data().leader
-        if (leaderRef == undefined)
-            return undefined;
-
-        else return snapshot?.docs.find(doc => doc.id == leaderRef.id)
-
-    }
-
-    const assignToPod = (user: QueryDocumentSnapshot, pod: DocumentReference) => {
-        unassign(user)
-        Promise.all([
-            updateDoc(pod, { members: arrayUnion(user.ref) }),
-            updateDoc(user.ref, { pod })
-        ]).catch(setCreatePodError)
-    }
-
-    // Remove a user from a pod if they are a member of one
-    const unassign = (user: QueryDocumentSnapshot) => {
-        const pod = user.data().pod
-        if (pod == undefined) return;
-        Promise.all([
-            updateDoc(pod, { members: arrayRemove(user.ref) }),
-            updateDoc(user.ref, { pod: deleteField() })
-        ])
-    }
+    const { error: podError, makePodLeader, podLeader, deletePod, assignToPod, unassign }
+        = usePods(firestore, pods, snapshot)
 
     return (
         <div>
             <Header />
-            {createPodError && <ErrorDisplay error={createPodError} />}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px', marginTop: '100px' }}>
                 {(loadingUsers || loadingPods) ? (
                     <LoadingPage />
-                ) : (error || podError) ? (
-                    <ErrorDisplay error={error || podError} />
+                ) : (error || podLoadError || podError) ? (
+                    <ErrorDisplay error={error || podLoadError || podError} />
                 ) : (
                     <>
                         <h1 style={{ marginBottom: '20px', fontSize: '1.5em', fontWeight: 'bold' }}>Users</h1>
