@@ -7,6 +7,7 @@ import { ref, uploadBytes } from 'firebase/storage';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { LoadingPage } from './LoadingPage';
 import { useCollection } from 'react-firebase-hooks/firestore';
+import usePods from '../lib/pods';
 
 
 const labelStyle: React.CSSProperties = {
@@ -42,7 +43,10 @@ const buttonStyle = {
 const AddNewDeal = () => {
   const { firestore, storage } = Firebase.useContainer()
 
-  const [pods, loading, podError] = useCollection(collection(firestore, 'pods'))
+  const [pods, loading, podLoadError] = useCollection(collection(firestore, 'pods'))
+  const [users, userLoading, userError] = useCollection(collection(firestore, 'users'))
+
+  const { error: podError, podLeader } = usePods(firestore, pods, users)
 
   const [error, setError] = useState<Error>()
 
@@ -126,7 +130,7 @@ const AddNewDeal = () => {
 
       {error && <ErrorDisplay error={error} />}
 
-      {writing || loading ? <LoadingPage /> :
+      {writing || loading || userLoading ? <LoadingPage /> :
         <div style={{ background: '#f0f0f0', padding: '40px', boxSizing: 'border-box', paddingTop: '100px' }}> {/* Adjusted padding to accommodate fixed header */}
           <div style={{
             maxWidth: '700px',
@@ -217,7 +221,7 @@ const AddNewDeal = () => {
                   {
                     pods?.docs.map(pod =>
                       <option>
-                        {pod.id}
+                        {podLeader != undefined && podLeader(pod.ref)?.data().firstName}
                       </option>
                     )
                   }
