@@ -1,7 +1,14 @@
 import { CollectionReference, DocumentReference, Firestore, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions, addDoc, arrayRemove, arrayUnion, collection, deleteDoc, deleteField, updateDoc } from "firebase/firestore"
-import { useState } from "react"
 import { User } from "../lib/users"
+import { LoadingHook } from "react-firebase-hooks/auth/dist/util"
 import { useCollection } from "react-firebase-hooks/firestore"
+
+export const podPath = 'pods'
+
+type PodCollection = {
+    pods: Array<Pod>,
+    ref: CollectionReference
+}
 
 type Pod = {
     data: PodData,
@@ -13,7 +20,7 @@ type PodData = {
     members: Array<DocumentReference>
 }
 
-const podConverter: FirestoreDataConverter<Omit<Pod, "ref">> = {
+export const podConverter: FirestoreDataConverter<Pod> = {
     toFirestore(pod: Pod) {
         return pod.data;
     },
@@ -29,14 +36,25 @@ const podConverter: FirestoreDataConverter<Omit<Pod, "ref">> = {
     }
 }
 
-export const makePodLeader = (user: User, podCollection: CollectionReference): Promise<void | DocumentReference> => (
-    addDoc(podCollection, {
+export const usePods = (firestore: Firestore, path: string): [PodCollection, boolean, Error | undefined] => {
+    const podCollection = collection(firestore, path).withConverter(podConverter)
+    const [pods, loading, error] = useCollection(podCollection)
+
+    return [{ pods: pods != undefined ? pods?.docs.map(doc => doc.data()) : [], ref: podCollection }, loading, error]
+}
+
+export const makePodLeader = (user: User, podCollection: PodCollection): Promise<void | DocumentReference> => (
+    addDoc(podCollection.ref, {
         data: {
             leader: user.ref,
             members: [],
         }
     }).then(pod =>
         updateDoc(user.ref, { pod: pod }))
+)
+
+export const findPod = (user: User, podCollection: PodCollection): Pod | null => (
+    podCollection.pods.find(pod => (pod.data.leader == user.ref)) || null
 )
 
 // Deletes a pod: does not remove users

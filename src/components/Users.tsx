@@ -6,17 +6,22 @@ import { ErrorDisplay } from "./Error";
 import Header from "./header";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
-import { addDoc, arrayRemove, arrayUnion, deleteDoc, deleteField, doc, DocumentReference, updateDoc } from "firebase/firestore";
+import { podConverter } from "../lib/pods";
 import { useState } from "react";
-import usePods from "../lib/pods";
 
 
 
 export const Users = () => {
     const { firestore } = Firebase.useContainer();
-    const [snapshot, loadingUsers, error] = useCollection(collection(firestore, `users`));
+    const [users, loadingUsers, userError] = useCollection(collection(firestore, `users`));
+
     const podCollection = collection(firestore, 'pods')
-    const [pods, loadingPods, podLoadError] = useCollection(podCollection)
+    const [pods, loadingPods, podError] = useCollection(podCollection.withConverter(podConverter))
+
+    const [callbackError, setCallbackError] = useState<Error>()
+
+    const loading = loadingUsers || loadingPods
+    const error = userError || podError || callbackError
 
     // Function to sort users by last name with explicit types
     const sortUsersByLastName = (a: QueryDocumentSnapshot, b: QueryDocumentSnapshot) => {
@@ -31,17 +36,13 @@ export const Users = () => {
         return 0;
     };
 
-    const { error: podError, makePodLeader, podLeader, deletePod, assignToPod, unassign }
-        = usePods(firestore, pods, snapshot)
-
     return (
         <div>
             <Header />
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px', marginTop: '100px' }}>
-                {(loadingUsers || loadingPods) ? (
-                    <LoadingPage />
-                ) : (error || podLoadError || podError) ? (
-                    <ErrorDisplay error={error || podLoadError || podError} />
+                {loading ? <LoadingPage /> :
+                    (error) ? (
+                        <ErrorDisplay error={error} />
                 ) : (
                     <>
                         <h1 style={{ marginBottom: '20px', fontSize: '1.5em', fontWeight: 'bold' }}>Users</h1>
@@ -56,7 +57,7 @@ export const Users = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                        {snapshot?.docs.sort(sortUsersByLastName).map((user, index, array) => (
+                                        {users?.docs.sort(sortUsersByLastName).map((user, index, array) => (
                                             <tr key={user.id}>
                                         <td>
                                                     <img width={50} height={50} src={user.data().profilePic} />
