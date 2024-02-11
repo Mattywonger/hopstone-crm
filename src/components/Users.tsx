@@ -4,7 +4,6 @@ import { collection, QueryDocumentSnapshot } from "@firebase/firestore";
 import { LoadingPage } from "./LoadingPage";
 import { ErrorDisplay } from "./Error";
 import Header from "./header";
-import { defaultProfilePic } from "../providers/userProfile"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
 import { addDoc, arrayRemove, arrayUnion, deleteDoc, deleteField, doc, DocumentReference, updateDoc } from "firebase/firestore";
@@ -60,7 +59,7 @@ export const Users = () => {
                                         {snapshot?.docs.sort(sortUsersByLastName).map((user, index, array) => (
                                             <tr key={user.id}>
                                         <td>
-                                            <img width={50} height={50} src={user.data().profilePic || defaultProfilePic} />
+                                                    <img width={50} height={50} src={user.data().profilePic} />
                                         </td>
                                         <td style={{ borderBottom: array.length - 1 === index ? 'none' : '1px solid #ddd', padding: '8px' }}>
                                             {user.data().firstName}
@@ -94,8 +93,8 @@ export const Users = () => {
                                                             <DropdownMenuItem asChild>
                                                                 <Button onClick={event => {
                                                                     event.preventDefault();
-                                                                    unassign(user)
-                                                                    makePodLeader(user.ref)
+                                                                            unassign(user);
+                                                                            makePodLeader(user)
                                                                 }
                                                                 }>
                                                                     Make Pod Leader
