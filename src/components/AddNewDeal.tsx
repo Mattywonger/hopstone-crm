@@ -7,7 +7,6 @@ import { ref, uploadBytes } from 'firebase/storage';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { LoadingPage } from './LoadingPage';
 import { useCollection } from 'react-firebase-hooks/firestore';
-import usePods from '../lib/pods';
 
 
 const labelStyle: React.CSSProperties = {

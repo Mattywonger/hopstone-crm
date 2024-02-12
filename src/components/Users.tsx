@@ -6,17 +6,18 @@ import { ErrorDisplay } from "./Error";
 import Header from "./header";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
-import { podConverter } from "../lib/pods";
+import { assignToPod, deletePod, findPod, makePodLeader, PodCollectionPath, podConverter, podLeader, unassign, usePods } from "../lib/pods";
 import { useState } from "react";
+import { findUser, User, UserCollectionPath, useUsers } from "../lib/users";
+import { deleteField, updateDoc } from "firebase/firestore";
 
 
 
 export const Users = () => {
     const { firestore } = Firebase.useContainer();
-    const [users, loadingUsers, userError] = useCollection(collection(firestore, `users`));
 
-    const podCollection = collection(firestore, 'pods')
-    const [pods, loadingPods, podError] = useCollection(podCollection.withConverter(podConverter))
+    const [users, loadingUsers, userError] = useUsers(firestore, UserCollectionPath)
+    const [pods, loadingPods, podError] = usePods(firestore, PodCollectionPath)
 
     const [callbackError, setCallbackError] = useState<Error>()
 
@@ -24,9 +25,9 @@ export const Users = () => {
     const error = userError || podError || callbackError
 
     // Function to sort users by last name with explicit types
-    const sortUsersByLastName = (a: QueryDocumentSnapshot, b: QueryDocumentSnapshot) => {
-        const nameA = a.data().lastName.toUpperCase();
-        const nameB = b.data().lastName.toUpperCase();
+    const sortUsersByLastName = (a: User, b: User) => {
+        const nameA = a.profile.lastName.toUpperCase();
+        const nameB = b.profile.lastName.toUpperCase();
         if (nameA < nameB) {
             return -1;
         }
@@ -35,6 +36,27 @@ export const Users = () => {
         }
         return 0;
     };
+
+    const handleDeletePod = (user: User) => {
+        if (user.profile.pod == null) return;
+        const pod = findPod(user.profile.pod, pods)
+
+        if (pod == null) return;
+
+        Promise.all([
+            deletePod(pod),
+            updateDoc(user.ref, { pod: deleteField() }),
+            ...pod.data.members.map(member => updateDoc(member, { pod: deleteField() }))
+        ]).catch(setCallbackError)
+    }
+
+    const findPodLeader = (user: User) => {
+        if (user.profile.pod == null) return null;
+        const pod = findPod(user.profile.pod, pods)
+
+        if (pod == null) return null;
+        return findUser(pod.data.leader, users)
+    }
 
     return (
         <div>
@@ -57,45 +79,47 @@ export const Users = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                        {users?.docs.sort(sortUsersByLastName).map((user, index, array) => (
-                                            <tr key={user.id}>
+                                        {users.users.sort(sortUsersByLastName).map((user, index, array) => (
+                                            <tr key={user.ref.id}>
                                         <td>
-                                                    <img width={50} height={50} src={user.data().profilePic} />
+                                                    <img width={50} height={50} src={user.profile.profilePic} />
                                         </td>
                                         <td style={{ borderBottom: array.length - 1 === index ? 'none' : '1px solid #ddd', padding: '8px' }}>
-                                            {user.data().firstName}
-                                            {user.data().isAdmin && (" (admin) ")}
+                                                    {user.profile.firstName}
+                                                    {user.profile.isAdmin && (" (admin) ")}
                                         </td>
                                         <td style={{ borderBottom: array.length - 1 === index ? 'none' : '1px solid #ddd', padding: '8px' }}>
-                                            {user.data().lastName}
+                                                    {user.profile.lastName}
                                         </td>
                                         <td>
-                                            {(user.data().pod && podLeader(user.data().pod)?.id == user.id) ?
+                                                    {(user.profile.pod != null && findPod(user.profile.pod, pods)?.data.leader.id == user.ref.id) ?
                                                 <>
                                                     <p>Pod Leader</p>
-                                                    <Button onClick={event => { event.preventDefault; deletePod(user) }}>Delete Pod</Button>
+                                                            <Button onClick={event => { event.preventDefault; handleDeletePod(user) }}>Delete Pod</Button>
                                                 </> :
                                                 <>
                                                     <DropdownMenu>
                                                         <DropdownMenuTrigger asChild>
-                                                            <Button>{user.data().pod == undefined ? "Not Assigned" : podLeader(user.data().pod)?.data().firstName}</Button>
+                                                                    <Button>{user.profile.pod == undefined ? "Not Assigned" : findPodLeader(user)?.profile.firstName}</Button>
                                                         </DropdownMenuTrigger>
                                                         <DropdownMenuContent>
                                                             {
-                                                                pods?.docs.filter(pod => pod.data().leader).map((pod, index, array) => (
-                                                                    <DropdownMenuItem asChild id={pod.id}>
-                                                                        <Button onClick={() => assignToPod(user, pod.ref)}>{podLeader(pod.ref)?.data().firstName}</Button>
+                                                                        pods.pods.filter(pod => pod.data.leader).map((pod, index, array) => (
+                                                                            <DropdownMenuItem asChild id={pod.ref.id}>
+                                                                                <Button onClick={() => assignToPod(user, pod)}>
+                                                                                    {findUser(pod.data.leader, users)?.profile.firstName}
+                                                                                </Button>
                                                                     </DropdownMenuItem>
                                                                 ))
                                                             }
-                                                            {user.data().pod != undefined && <DropdownMenuItem asChild>
+                                                                    {user.profile.pod != undefined && <DropdownMenuItem asChild>
                                                                 <Button onClick={() => unassign(user)}>Unassign</Button>
                                                             </DropdownMenuItem>}
                                                             <DropdownMenuItem asChild>
                                                                 <Button onClick={event => {
                                                                     event.preventDefault();
                                                                             unassign(user);
-                                                                            makePodLeader(user)
+                                                                            makePodLeader(user, pods)
                                                                 }
                                                                 }>
                                                                     Make Pod Leader

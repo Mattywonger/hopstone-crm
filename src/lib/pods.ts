@@ -1,9 +1,8 @@
 import { CollectionReference, DocumentReference, Firestore, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions, addDoc, arrayRemove, arrayUnion, collection, deleteDoc, deleteField, updateDoc } from "firebase/firestore"
 import { User } from "../lib/users"
-import { LoadingHook } from "react-firebase-hooks/auth/dist/util"
 import { useCollection } from "react-firebase-hooks/firestore"
 
-export const podPath = 'pods'
+export const PodCollectionPath = 'pods'
 
 type PodCollection = {
     pods: Array<Pod>,
@@ -53,8 +52,8 @@ export const makePodLeader = (user: User, podCollection: PodCollection): Promise
         updateDoc(user.ref, { pod: pod }))
 )
 
-export const findPod = (user: User, podCollection: PodCollection): Pod | null => (
-    podCollection.pods.find(pod => (pod.data.leader == user.ref)) || null
+export const findPod = (ref: DocumentReference, podCollection: PodCollection): Pod | null => (
+    podCollection.pods.find(pod => (pod.ref.id == ref.id)) || null
 )
 
 // Deletes a pod: does not remove users
@@ -76,7 +75,7 @@ export const assignToPod = (user: User, pod: Pod): Promise<[... void[], void, vo
     ])
 )
 
-// Unassigns a user from a pod
+// Unassigns a user as a member of a pod
 // Removes the reference to the pod from the user if deleteRef is true
 export const unassign = (user: User): Promise<[] | [void, void]> => {
     const pod = user.profile.pod

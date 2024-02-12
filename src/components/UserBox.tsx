@@ -2,11 +2,11 @@ import { Profile } from "../providers/userProfile";
 
 
 export const UserBox = () => {
-    const { profile } = Profile.useContainer();
+    const { profile: user } = Profile.useContainer();
 
     return (
         <div>
-            <p>{profile?.firstName}</p>
+            <p>{user?.profile.firstName}</p>
         </div>
     )
 }

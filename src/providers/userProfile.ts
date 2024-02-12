@@ -1,9 +1,9 @@
-import { DocumentReference, doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { Firebase } from "./user";
 import { useDocument } from "react-firebase-hooks/firestore"
 import { createContainer } from "unstated-next";
 import { getDownloadURL, ref, uploadBytes } from "@firebase/storage";
-import { User, UserProfile } from "firebase/auth";
+import { UserProfile } from "firebase/auth";
 import { userConverter } from "../lib/users";
 
 
@@ -15,7 +15,7 @@ export const useUserProfile = () => {
     const document = doc(firestore, `users/${user?.uid}`).withConverter(userConverter)
     const [snapshot, loading, error] = useDocument(document)
 
-    const profile = snapshot?.data();
+    const profile = snapshot?.data()
 
     const updateProfile = (newProfile: Partial<UserProfile>) => {
         return updateDoc(document, { newProfile })

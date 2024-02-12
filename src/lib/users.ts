@@ -1,9 +1,8 @@
-import { CollectionReference, DocumentData, DocumentReference, DocumentSnapshot, Firestore, FirestoreDataConverter, QueryDocumentSnapshot, QuerySnapshot, SnapshotOptions, WithFieldValue, collection } from "firebase/firestore"
-import { ProfilerOnRenderCallback } from "react"
+import { CollectionReference, DocumentData, DocumentReference, Firestore, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions, collection } from "firebase/firestore"
 import { useCollection } from "react-firebase-hooks/firestore"
 
 const defaultProfilePic = "/unknown-user.png";
-const UserCollectionPath = "users"
+export const UserCollectionPath = "users"
 
 export type UserCollection = {
     users: Array<User>,
@@ -31,17 +30,16 @@ export const useUsers = (firestore: Firestore, path: string): [UserCollection, b
 }
 
 export const findUser = (ref: DocumentReference, userCollection: UserCollection): User | null => (
-    userCollection.users.find(user => user.ref == ref) || null
+    userCollection.users.find(user => user.ref.id == ref.id) || null
 )
 
 const profileFromDoc = (doc: DocumentData) => {
-    const data = doc.data()
     return {
-        firstName: data?.firstName,
-        lastName: data?.lastName,
-        profilePic: data?.profilePic || defaultProfilePic,
-        isAdmin: data?.isAdmin || false,
-        pod: data?.pod || null
+        firstName: doc.firstName,
+        lastName: doc.lastName,
+        profilePic: doc.profilePic || defaultProfilePic,
+        isAdmin: doc.isAdmin || false,
+        pod: doc.pod || null
     };
 }
 

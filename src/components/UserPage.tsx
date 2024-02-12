@@ -9,7 +9,7 @@ import { ErrorDisplay } from "./Error";
 import { ProfilePicture } from "./ProfilePicture";
 
 export const UserPage = () => {
-    const { loading, profile, error, updateProfile, updateProfilePic } = Profile.useContainer();
+    const { loading, profile: user, error, updateProfile, updateProfilePic } = Profile.useContainer();
     const [writeError, setError] = useState<Error | null>(null);
     const [firstName, setFirstName] = useState<string>("");
     const [lastName, setLastName] = useState<string>("");
@@ -17,8 +17,8 @@ export const UserPage = () => {
 
     useEffect(() => {
         if (!loading) {
-            setFirstName(profile?.firstName || "");
-            setLastName(profile?.lastName || "");
+            setFirstName(user?.profile.firstName || "");
+            setLastName(user?.profile.lastName || "");
         }
     }, [loading])
 
