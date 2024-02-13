@@ -16,7 +16,8 @@ type Pod = {
 
 type PodData = {
     leader: DocumentReference,
-    members: Array<DocumentReference>
+    members: Array<DocumentReference>,
+    deals: Array<DocumentReference>
 }
 
 export const podConverter: FirestoreDataConverter<Pod> = {
@@ -28,7 +29,8 @@ export const podConverter: FirestoreDataConverter<Pod> = {
         return {
             data: {
                 leader: data.leader,
-                members: data.members
+                members: data.members,
+                deals: data.deals
             },
             ref: snapshot.ref
         }
@@ -47,6 +49,7 @@ export const makePodLeader = (user: User, podCollection: PodCollection): Promise
         data: {
             leader: user.ref,
             members: [],
+            deals: []
         }
     }).then(pod =>
         updateDoc(user.ref, { pod: pod }))
@@ -73,6 +76,10 @@ export const assignToPod = (user: User, pod: Pod): Promise<[... void[], void, vo
         updateDoc(pod.ref, { members: arrayUnion(user.ref) }),
         updateDoc(user.ref, { pod: pod.ref })
     ])
+)
+
+export const addDeal = (pod: Pod, deal: DocumentReference): Promise<void> => (
+    updateDoc(pod.ref, { deals: arrayUnion(deal) })
 )
 
 // Unassigns a user as a member of a pod

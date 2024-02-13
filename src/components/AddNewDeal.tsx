@@ -7,6 +7,8 @@ import { ref, uploadBytes } from 'firebase/storage';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { LoadingPage } from './LoadingPage';
 import { useCollection } from 'react-firebase-hooks/firestore';
+import { PodCollectionPath, addDeal, findPod, podLeader, usePods } from '../lib/pods';
+import { UserCollectionPath, findUser, useUsers } from '../lib/users';
 
 
 const labelStyle: React.CSSProperties = {
@@ -42,10 +44,9 @@ const buttonStyle = {
 const AddNewDeal = () => {
   const { firestore, storage } = Firebase.useContainer()
 
-  const [pods, loading, podLoadError] = useCollection(collection(firestore, 'pods'))
-  const [users, userLoading, userError] = useCollection(collection(firestore, 'users'))
+  const [users, userLoading, userError] = useUsers(firestore, UserCollectionPath)
 
-  const { error: podError, podLeader } = usePods(firestore, pods, users)
+  const [pods, podsLoading, podError] = usePods(firestore, PodCollectionPath)
 
   const [error, setError] = useState<Error>()
 
@@ -62,7 +63,7 @@ const AddNewDeal = () => {
   const [status, setStatus] = useState<string>("")
   const [industry, setIndustry] = useState<string>("")
   const [round, setRound] = useState<string>("")
-  const [pod, setPod] = useState<string>("")
+  const [podID, setPodID] = useState<string>("")
 
   const [pitchDeck, setPitchDeck] = useState<File>()
   const [pitchRecording, setPitchRecording] = useState<File>()
@@ -72,6 +73,8 @@ const AddNewDeal = () => {
 
   const createDeal = (event: FormEvent) => {
     event.preventDefault()
+    // TODO make this search less bad
+    const pod = findPod(doc(firestore, PodCollectionPath, podID), pods)
 
     if (pitchDeck == undefined) {
       setError(Error("No Pitch Deck!"))
@@ -81,6 +84,9 @@ const AddNewDeal = () => {
       return;
     } else if (pointPersonPhoto == undefined) {
       setError(Error("No Point Person Photo"))
+      return;
+    } else if (pod == null) {
+      setError(Error("No pod selected"))
       return;
     }
 
@@ -112,6 +118,7 @@ const AddNewDeal = () => {
             .map(file => uploadBytes(ref(storage, `Deals/${document.id}/additionalFiles/${file.name}`), file))
 
         Promise.all([
+          addDeal(pod, document),
           uploadBytes(deckPath, pitchDeck),
           uploadBytes(recordingPath, pitchRecording),
           uploadBytes(photoPath, pointPersonPhoto),
@@ -129,7 +136,7 @@ const AddNewDeal = () => {
 
       {error && <ErrorDisplay error={error} />}
 
-      {writing || loading || userLoading ? <LoadingPage /> :
+      {writing || podsLoading || userLoading ? <LoadingPage /> :
         <div style={{ background: '#f0f0f0', padding: '40px', boxSizing: 'border-box', paddingTop: '100px' }}> {/* Adjusted padding to accommodate fixed header */}
           <div style={{
             maxWidth: '700px',
@@ -216,12 +223,12 @@ const AddNewDeal = () => {
               </label>
               <label style={labelStyle}>
                 Pod
-                <select name="pod" style={inputStyle} onChange={event => setPod(event.target.value)}>
+                <select name="pod" style={inputStyle} onChange={event => setPodID(event.target.value)}>
                   {
-                    pods?.docs.map(pod =>
-                      <option>
-                        {podLeader != undefined && podLeader(pod.ref)?.data().firstName}
-                      </option>
+                    pods.pods.map(pod =>
+                      pod.data.leader ? <option value={pod.ref.id} key={pod.ref.id}>
+                        {findUser(pod.data.leader, users)?.profile.firstName}
+                      </option> : <></>
                     )
                   }
                 </select>
