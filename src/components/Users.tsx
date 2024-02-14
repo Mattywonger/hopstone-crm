@@ -106,7 +106,7 @@ export const Users = () => {
                                                             {
                                                                         pods.pods.filter(pod => pod.data.leader).map((pod, index, array) => (
                                                                             <DropdownMenuItem asChild id={pod.ref.id}>
-                                                                                <Button onClick={() => assignToPod(user, pod)}>
+                                                                                <Button onClick={() => { if (user.profile.pod) { unassign(user); } assignToPod(user, pod) }}>
                                                                                     {findUser(pod.data.leader, users)?.profile.firstName}
                                                                                 </Button>
                                                                     </DropdownMenuItem>
