@@ -63,7 +63,7 @@ const AddNewDeal = () => {
   const [status, setStatus] = useState<string>("")
   const [industry, setIndustry] = useState<string>("")
   const [round, setRound] = useState<string>("")
-  const [podID, setPodID] = useState<string>("")
+  const [podID, setPodID] = useState<string | null>(null)
 
   const [pitchDeck, setPitchDeck] = useState<File>()
   const [pitchRecording, setPitchRecording] = useState<File>()
@@ -74,6 +74,12 @@ const AddNewDeal = () => {
   const createDeal = (event: FormEvent) => {
     event.preventDefault()
     // TODO make this search less bad
+    console.log(podID)
+
+    if (podID == null) {
+      setError(Error("No Pod Selected"))
+      return;
+    }
     const pod = findPod(doc(firestore, PodCollectionPath, podID), pods)
 
     if (pitchDeck == undefined) {
@@ -91,6 +97,8 @@ const AddNewDeal = () => {
     }
 
     setWriting(true)
+
+    console.log("saving doc")
 
     addDoc(collection(firestore, "Deals"), {
       dealName,
