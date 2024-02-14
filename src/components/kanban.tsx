@@ -15,23 +15,17 @@ import {
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
 import TaskCard from "./TaskCard";
+import { Status } from "../lib/deals";
+import { $enum } from "ts-enum-util";
 
-const defaultCols: Column[] = [
+const defaultCols: Column[] = $enum(Status).map(status => (
   {
-    id: "todo",
-    title: "Todo",
-  },
-  {
-    id: "doing",
-    title: "Work in progress",
-  },
-  {
-    id: "done",
-    title: "Done",
-  },
-];
+    id: status.toString(),
+    title: Status[status].toString(),
+  }
+))
 
-const defaultTasks: Task[] = [
+const defaultTasks: Task[] = [] /*[
   {
     id: "3",
     columnId: "doing",
@@ -63,7 +57,7 @@ const defaultTasks: Task[] = [
     columnId: "doing",
     content: "Design and implement responsive UI",
   },
-];
+];*/
 
 function KanbanBoard() {
   const [columns, setColumns] = useState<Column[]>(defaultCols);

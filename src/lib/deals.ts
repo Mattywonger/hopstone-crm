@@ -25,6 +25,7 @@ export enum ARP {
 }
 
 export enum Status {
+    InfoCall,
     OnePager,
     DueDiligence,
     InvestmentMemo,
