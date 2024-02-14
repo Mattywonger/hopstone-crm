@@ -166,30 +166,6 @@ function ColumnContainer({
           ))}
         </SortableContext>
       </div>
-
-      {/* Column footer */}
-      <button
-        className="
-          flex
-          items-center
-          justify-center
-          border-columnBackgroundColor
-          border-2
-          rounded-md
-          p-2
-          border-x-columnBackgroundColor
-          hover:bg-mainBackgroundColor
-          hover:text-rose-500
-          active:bg-black
-          mt-2
-        "
-        onClick={() => {
-          createTask(column.id);
-        }}
-      >
-        <PlusIcon />
-        Add task
-      </button>
     </div>
   );
 }
