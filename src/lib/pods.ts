@@ -78,8 +78,8 @@ export const assignToPod = (user: User, pod: Pod): Promise<[... void[], void, vo
     ])
 )
 
-export const addDeal = (pod: Pod, deal: DocumentReference): Promise<void> => (
-    updateDoc(pod.ref, { deals: arrayUnion(deal) })
+export const addDeal = (pod: DocumentReference, deal: DocumentReference): Promise<void> => (
+    updateDoc(pod, { deals: arrayUnion(deal) })
 )
 
 // Unassigns a user as a member of a pod
