@@ -23,7 +23,6 @@ function ColumnContainer({
   deleteTask,
   updateTask,
 }: Props) {
-  const [editMode, setEditMode] = useState(false);
 
   const tasksIds = useMemo(() => {
     return deals.map((deal) => deal.ref.id);
@@ -42,7 +41,6 @@ function ColumnContainer({
       type: "Column",
       column,
     },
-    disabled: editMode,
   });
 
   const style = {
@@ -86,7 +84,6 @@ function ColumnContainer({
       <div
         {...attributes}
         {...listeners}
-        onClick={() => setEditMode(true)}
         className="
           bg-mainBackgroundColor
           text-md
@@ -116,23 +113,7 @@ function ColumnContainer({
             "
           >
           </div>
-          {!editMode && column.title}
-          {editMode && (
-            <input
-              className="bg-white focus:border-rose-500 border rounded outline-none px-2"
-              value={column.title}
-              onChange={(e) => updateColumn(column.id, e.target.value)}
-              autoFocus
-              onBlur={() => {
-                setEditMode(false);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  setEditMode(false);
-                }
-              }}
-            />
-          )}
+          {column.title}
         </div>
         <button
           onClick={() => {

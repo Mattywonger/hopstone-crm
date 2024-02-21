@@ -15,7 +15,7 @@ import {
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
 import DealCard from "./DealCard";
-import { Status, dealsCollectionPath, useDeals } from "../lib/deals";
+import { Status, dealsCollectionPath, findDeal, setStatus, useDeals } from "../lib/deals";
 import { $enum } from "ts-enum-util";
 import { Context } from "@dnd-kit/sortable/dist/components";
 import { enumKeys } from "../lib/utils";
@@ -26,15 +26,13 @@ import { LoadingPage } from "./LoadingPage";
 
 const defaultCols: Column[] = enumKeys(Status).map(status => (
   {
-    id: status.toString(),
+    id: status,
     title: (Status as any)[status],
   }
 ))
 
 const defaultTasks: Task[] = []
 function KanbanBoard() {
-  const [tasks, setTasks] = useState<Task[]>(defaultTasks);
-
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   const { firestore } = Firebase.useContainer()
@@ -71,7 +69,7 @@ function KanbanBoard() {
         >
           <div className="m-auto flex gap-4">
             <div className="flex gap-4">
-              <div>
+              <div style={{ display: "flex" }}>
                 {defaultCols.map((col) => (
                   <ColumnContainer
                     key={col.id}
@@ -96,17 +94,9 @@ function KanbanBoard() {
   }
 
   function deleteTask(id: Id) {
-    const newTasks = tasks.filter((task) => task.id !== id);
-    setTasks(newTasks);
   }
 
   function updateTask(id: Id, content: string) {
-    const newTasks = tasks.map((task) => {
-      if (task.id !== id) return task;
-      return { ...task, content };
-    });
-
-    setTasks(newTasks);
   }
 
 
@@ -145,7 +135,7 @@ function KanbanBoard() {
     if (!isActiveATask) return;
 
     // Im dropping a Task over another Task
-    if (isActiveATask && isOverATask) {
+    /*if (isActiveATask && isOverATask) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
         const overIndex = tasks.findIndex((t) => t.id === overId);
@@ -158,19 +148,16 @@ function KanbanBoard() {
 
         return arrayMove(tasks, activeIndex, overIndex);
       });
-    }
+    }*/
 
     const isOverAColumn = over.data.current?.type === "Column";
 
     // Im dropping a Task over a column
     if (isActiveATask && isOverAColumn) {
-      setTasks((tasks) => {
-        const activeIndex = tasks.findIndex((t) => t.id === activeId);
-
-        tasks[activeIndex].columnId = overId;
-        console.log("DROPPING TASK OVER COLUMN", { activeIndex });
-        return arrayMove(tasks, activeIndex, activeIndex);
-      });
+      const deal = findDeal(deals, activeId.toString())
+      if (deal) {
+        setStatus(deal, overId as Status)
+      }
     }
   }
 }

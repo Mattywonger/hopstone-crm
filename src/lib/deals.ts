@@ -1,4 +1,4 @@
-import { CollectionReference, DocumentData, DocumentReference, Firestore, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions, collection } from "firebase/firestore"
+import { CollectionReference, DocumentData, DocumentReference, Firestore, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions, collection, updateDoc } from "firebase/firestore"
 import { useCollection } from "react-firebase-hooks/firestore"
 
 type DealCollection = {
@@ -96,3 +96,11 @@ export const useDeals = (firestore: Firestore, path: string): [DealCollection, b
 
     return [{ deals: deals != undefined ? deals.docs.map(deal => deal.data()) : [], ref: dealCollection }, loading, error || null]
 }
+
+export const setStatus = (deal: Deal, status: Status): Promise<void> => (
+    updateDoc(deal.ref, { status: status })
+)
+
+export const findDeal = (deals: DealCollection, id: string): Deal | null => (
+    deals.deals.find(deal => deal.ref.id == id) || null
+)
