@@ -8,8 +8,6 @@ import { Deal } from "../lib/deals";
 
 interface Props {
   column: Column;
-  updateColumn: (id: Id, title: string) => void;
-  createTask: (columnId: Id) => void;
   updateTask: (id: Id, content: string) => void;
   deleteTask: (id: Id) => void;
   deals: Deal[];
@@ -17,8 +15,6 @@ interface Props {
 
 function ColumnContainer({
   column,
-  updateColumn,
-  createTask,
   deals,
   deleteTask,
   updateTask,

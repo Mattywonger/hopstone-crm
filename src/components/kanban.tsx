@@ -31,9 +31,7 @@ const defaultCols: Column[] = enumKeys(Status).map(status => (
   }
 ))
 
-const defaultTasks: Task[] = []
 function KanbanBoard() {
-  const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   const { firestore } = Firebase.useContainer()
   const [deals, loading, error] = useDeals(firestore, dealsCollectionPath)
@@ -74,11 +72,9 @@ function KanbanBoard() {
                   <ColumnContainer
                     key={col.id}
                     column={col}
-                    createTask={createTask}
                     deleteTask={deleteTask}
                     updateTask={updateTask}
                     deals={deals.deals.filter(deal => deal.data.status == col.id)}
-                    updateColumn={() => { }} // TODO check
                   />
                 ))}
               </div>
@@ -90,8 +86,6 @@ function KanbanBoard() {
     </>
   );
 
-  function createTask(columnId: Id) {
-  }
 
   function deleteTask(id: Id) {
   }
@@ -102,13 +96,11 @@ function KanbanBoard() {
 
   function onDragStart(event: DragStartEvent) {
     if (event.active.data.current?.type === "Task") {
-      setActiveTask(event.active.data.current.task);
       return;
     }
   }
 
   function onDragEnd(event: DragEndEvent) {
-    setActiveTask(null);
 
     const { active, over } = event;
     if (!over) return;
