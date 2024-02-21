@@ -3,14 +3,15 @@ import TrashIcon from "../icons/TrashIcon";
 import { Id, Task } from "../types";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { Deal } from "../lib/deals";
 
 interface Props {
-  task: Task;
+  deal: Deal;
   deleteTask: (id: Id) => void;
   updateTask: (id: Id, content: string) => void;
 }
 
-function TaskCard({ task, deleteTask, updateTask }: Props) {
+function DealCard({ deal, deleteTask, updateTask }: Props) {
   const [mouseIsOver, setMouseIsOver] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
@@ -22,10 +23,10 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
     transition,
     isDragging,
   } = useSortable({
-    id: task.id,
+    id: deal.ref.id,
     data: {
       type: "Task",
-      task,
+      deal,
     },
     disabled: editMode,
   });
@@ -53,34 +54,7 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
     );
   }
 
-  if (editMode) {
-    return (
-      <div
-        ref={setNodeRef}
-        style={style}
-        {...attributes}
-        {...listeners}
-        className="bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-rose-500 cursor-text relative"
-      >
-        <textarea
-          className="
-            h-full
-            w-full resize-none border-none rounded bg-transparent text-black focus:outline-none
-          "
-          value={task.content}
-          autoFocus
-          placeholder="Task content here"
-          onBlur={toggleEditMode}
-          onChange={(e) => updateTask(task.id, e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              toggleEditMode();
-            }
-          }}
-        />
-      </div>
-    );
-  }
+  //NOTE: Edit Mode removed here
 
   return (
     <div
@@ -98,14 +72,14 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
       }}
     >
       <p className="my-auto h-full w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap">
-        {task.content}
+        {deal.data.name}
       </p>
 
       {mouseIsOver && (
         <button
           onClick={(e) => {
             e.stopPropagation(); // Prevent the click from triggering the onClick of the parent div
-            deleteTask(task.id);
+            //deleteTask(task.id);
           }}
           className="stroke-white absolute right-4 top-1/2 -translate-y-1/2 bg-columnBackgroundColor p-2 rounded opacity-60 hover:opacity-100"
         >
@@ -116,4 +90,4 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
   );
 }
 
-export default TaskCard;
+export default DealCard;

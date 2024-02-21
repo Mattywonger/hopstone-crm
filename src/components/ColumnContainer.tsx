@@ -3,33 +3,31 @@ import TrashIcon from "../icons/TrashIcon";
 import { Column, Id, Task } from "../types";
 import { CSS } from "@dnd-kit/utilities";
 import { useMemo, useState } from "react";
-import PlusIcon from "../icons/PlusIcon";
-import TaskCard from "./TaskCard";
+import DealCard from "./DealCard";
+import { Deal } from "../lib/deals";
 
 interface Props {
   column: Column;
-  deleteColumn: (id: Id) => void;
   updateColumn: (id: Id, title: string) => void;
   createTask: (columnId: Id) => void;
   updateTask: (id: Id, content: string) => void;
   deleteTask: (id: Id) => void;
-  tasks: Task[];
+  deals: Deal[];
 }
 
 function ColumnContainer({
   column,
-  deleteColumn,
   updateColumn,
   createTask,
-  tasks,
+  deals,
   deleteTask,
   updateTask,
 }: Props) {
   const [editMode, setEditMode] = useState(false);
 
   const tasksIds = useMemo(() => {
-    return tasks.map((task) => task.id);
-  }, [tasks]);
+    return deals.map((deal) => deal.ref.id);
+  }, [deals]);
 
   const {
     setNodeRef,
@@ -117,7 +115,6 @@ function ColumnContainer({
               rounded-full
             "
           >
-            {tasks.length}
           </div>
           {!editMode && column.title}
           {editMode && (
@@ -139,7 +136,7 @@ function ColumnContainer({
         </div>
         <button
           onClick={() => {
-            deleteColumn(column.id);
+            //deleteColumn(column.id);
           }}
           className="
             text-gray-500
@@ -156,10 +153,10 @@ function ColumnContainer({
       {/* Column task container */}
       <div className="flex-grow flex-col p-2">
         <SortableContext items={tasksIds}>
-          {tasks.map((task) => (
-            <TaskCard
-              key={task.id}
-              task={task}
+          {deals.map((deal) => (
+            <DealCard
+              key={deal.ref.id}
+              deal={deal}
               deleteTask={deleteTask}
               updateTask={updateTask}
             />

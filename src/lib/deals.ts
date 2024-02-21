@@ -1,4 +1,10 @@
-import { DocumentData, DocumentReference, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions } from "firebase/firestore"
+import { CollectionReference, DocumentData, DocumentReference, Firestore, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions, collection } from "firebase/firestore"
+import { useCollection } from "react-firebase-hooks/firestore"
+
+type DealCollection = {
+    deals: Array<Deal>,
+    ref: CollectionReference
+}
 
 export type Deal = {
     data: DealData,
@@ -58,7 +64,7 @@ export const Industries = [
     "EdTech"
 ]
 
-export const dealsCollectionPath = "deals"
+export const dealsCollectionPath = "Deals"
 
 export const dealsConverter: FirestoreDataConverter<Deal> = {
     toFirestore(deal: Deal): DocumentData {
@@ -82,4 +88,11 @@ export const dealsConverter: FirestoreDataConverter<Deal> = {
             ref: snapshot.ref
         }
     }
+}
+
+export const useDeals = (firestore: Firestore, path: string): [DealCollection, boolean, Error | null] => {
+    const dealCollection = collection(firestore, path).withConverter(dealsConverter)
+    const [deals, loading, error] = useCollection(dealCollection)
+
+    return [{ deals: deals != undefined ? deals.docs.map(deal => deal.data()) : [], ref: dealCollection }, loading, error || null]
 }
