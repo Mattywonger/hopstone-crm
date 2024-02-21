@@ -1,4 +1,4 @@
-import { CollectionReference, DocumentData, DocumentReference, Firestore, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions, collection, updateDoc } from "firebase/firestore"
+import { CollectionReference, DocumentData, DocumentReference, Firestore, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions, collection, deleteDoc, updateDoc } from "firebase/firestore"
 import { useCollection } from "react-firebase-hooks/firestore"
 
 type DealCollection = {
@@ -103,4 +103,9 @@ export const setStatus = (deal: Deal, status: Status): Promise<void> => (
 
 export const findDeal = (deals: DealCollection, id: string): Deal | null => (
     deals.deals.find(deal => deal.ref.id == id) || null
+)
+
+// Deletes a deal. Does not remove from pod
+export const deleteDeal = (deal: Deal) => (
+    deleteDoc(deal.ref)
 )

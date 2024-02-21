@@ -3,7 +3,11 @@ import TrashIcon from "../icons/TrashIcon";
 import { Id, Task } from "../types";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Deal } from "../lib/deals";
+import { Deal, deleteDeal } from "../lib/deals";
+import { Link } from "react-router-dom";
+import { Button } from "./ui/button";
+import { DocumentData, DocumentReference, arrayRemove } from "firebase/firestore";
+import { updateDoc } from "firebase/firestore";
 
 interface Props {
   deal: Deal;
@@ -63,7 +67,7 @@ function DealCard({ deal, deleteTask, updateTask }: Props) {
       {...attributes}
       {...listeners}
       onClick={toggleEditMode}
-      className="bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-rose-500 cursor-grab relative"
+      className="bg-mainBackgroundColor p-2.5 h-[200px] min-h-[100px] items-center flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-rose-500 cursor-grab relative border-4 border-indigo-500"
       onMouseEnter={() => {
         setMouseIsOver(true);
       }}
@@ -71,9 +75,15 @@ function DealCard({ deal, deleteTask, updateTask }: Props) {
         setMouseIsOver(false);
       }}
     >
-      <p className="my-auto h-full w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap">
-        {deal.data.name}
-      </p>
+      <div className="my-auto h-full w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap">
+        <h1>{deal.data.name}</h1>
+        <h2>{deal.data.pointPersonName}</h2>
+        <Button onClick={e => {
+          updateDoc(deal.data.pod,
+            { deals: arrayRemove(deal.ref) });
+          deleteDeal(deal)
+        }}>Delete</Button>
+      </div>
 
       {mouseIsOver && (
         <button

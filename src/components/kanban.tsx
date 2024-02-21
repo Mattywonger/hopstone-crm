@@ -120,6 +120,7 @@ function KanbanBoard() {
 
   }
 
+  // TODO: to save write should we only update once the item is dropped?
   function onDragOver(event: DragOverEvent) {
     const { active, over } = event;
     if (!over) return;
