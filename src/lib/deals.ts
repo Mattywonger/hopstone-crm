@@ -18,26 +18,45 @@ export type DealData = {
     pod: DocumentReference
 }
 
+//TODO: These should be enums, but Typescript has bad support for them
+
 export enum ARP {
-    Active,
-    Rejected,
-    PostInvestment
+    Active = "Active",
+    Rejected = "Rejected",
+    PostInvestment = "Post Investment"
 }
 
 export enum Status {
-    OnePager,
-    DueDiligence,
-    InvestmentMemo,
-    LPPitching
+    OnePager = "One Pager",
+    DueDiligence = "Due Diligence",
+    InvestmentMemo = "Investment Memo",
+    LPPitching = "LP Pitching"
 }
 
 export enum Round {
-    PreSeed,
-    Seed,
-    SeriesA,
-    SeriesB,
-    SeriesC
+    PreSeed = "Pre Seed",
+    Seed = "Seed",
+    SeriesA = "Series A",
+    SeriesB = "Series B",
+    SeriesC = "Series C"
 }
+
+export const Industries = [
+    "Real Estate",
+    "Fintech",
+    "Hardware",
+    "AI",
+    "VR",
+    "Ecommerce",
+    "B2B",
+    "Delivery Service",
+    "B2C",
+    "MedTech",
+    "HCIT",
+    "SaaS",
+    "BioTech",
+    "EdTech"
+]
 
 export const dealsCollectionPath = "deals"
 

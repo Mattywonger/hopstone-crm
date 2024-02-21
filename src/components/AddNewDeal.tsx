@@ -9,6 +9,8 @@ import { LoadingPage } from './LoadingPage';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { PodCollectionPath, addDeal, findPod, podLeader, usePods } from '../lib/pods';
 import { UserCollectionPath, findUser, useUsers } from '../lib/users';
+import { ARP, Industries, Round, Status } from '../lib/deals';
+import { enumKeys, enumNums } from '../lib/utils';
 
 
 const labelStyle: React.CSSProperties = {
@@ -63,7 +65,7 @@ const AddNewDeal = () => {
   const [status, setStatus] = useState<string>("")
   const [industry, setIndustry] = useState<string>("")
   const [round, setRound] = useState<string>("")
-  const [podID, setPodID] = useState<string | null>(null)
+  const [podID, setPodID] = useState<string>("")
 
   const [pitchDeck, setPitchDeck] = useState<File>()
   const [pitchRecording, setPitchRecording] = useState<File>()
@@ -74,13 +76,12 @@ const AddNewDeal = () => {
   const createDeal = (event: FormEvent) => {
     event.preventDefault()
     // TODO make this search less bad
-    console.log(podID)
 
-    if (podID == null) {
+    if (podID == "") {
       setError(Error("No Pod Selected"))
       return;
     }
-    const pod = findPod(doc(firestore, PodCollectionPath, podID), pods)
+    const pod = doc(firestore, PodCollectionPath, podID)
 
     if (pitchDeck == undefined) {
       setError(Error("No Pitch Deck!"))
@@ -94,23 +95,24 @@ const AddNewDeal = () => {
     } else if (pod == null) {
       setError(Error("No pod selected"))
       return;
+    } if (status == "") {
+      setError(Error("No Status Selected"))
+      return;
     }
 
     setWriting(true)
 
-    console.log("saving doc")
-
     addDoc(collection(firestore, "Deals"), {
-      dealName,
-      companyName,
-      pointPerson,
-      pointPersonEmail,
-      Linkedin: pointPersonLinkedin,
-      arp,
-      status,
-      industry,
-      round,
-      pod
+      name: dealName,
+      company: companyName,
+      pointPersonName: pointPerson,
+      pointPersonEmail: pointPersonEmail,
+      linkedin: pointPersonLinkedin,
+      arp: arp,
+      status: status,
+      industry: industry,
+      round: round,
+      pod: pod
     }).catch(setError).then(
       document => {
         console.log(document)
@@ -183,55 +185,51 @@ const AddNewDeal = () => {
                 Active, Rejected, Post Investment
                 <select name="dealType" style={inputStyle} onChange={event => setARP(event.target.value)}>
                   <option value="">Select...</option>
-                  <option value="active">Active</option>
-                  <option value="rejected">Rejected</option>
-                  <option value="postInvestment">Post Investment</option>
+                  {
+                    enumKeys(ARP).map(key =>
+                      <option value={key} key={key}>{(ARP as any)[key]}</option>
+                    )
+                  }
                 </select>
               </label>
               <label style={labelStyle}>
                 Deal Status
                 <select name="dealStatus" style={inputStyle} onChange={event => setStatus(event.target.value)}>
                   <option value="">Select...</option>
-                  <option value="">One-pager</option>
-                  <option value="active">Due-Dilligence</option>
-                  <option value="rejected">Investment Memo</option>
-                  <option value="postInvestment">LP Pitching</option>
+                  {
+                    enumKeys(Status).map(key =>
+                      <option value={key} key={key}>{(Status as any)[key]}</option>
+                    )
+                  }
+
                 </select>
               </label>
               <label style={labelStyle}>
                 Industry
                 <select name="industry" style={inputStyle} onChange={event => setIndustry(event.target.value)}>
                   <option value="">Select...</option>
-                  <option value="">Real Estate</option>
-                  <option value="active">Fintech</option>
-                  <option value="rejected">Hardware</option>
-                  <option value="postInvestment">AI</option>
-                  <option value="">VR</option>
-                  <option value="">Ecommerce</option>
-                  <option value="active">B2B</option>
-                  <option value="rejected">Delivery Service</option>
-                  <option value="postInvestment">B2C</option>
-                  <option value="">MedTech</option>
-                  <option value="">HCIT</option>
-                  <option value="active">SaaS</option>
-                  <option value="rejected">BioTech</option>
-                  <option value="postInvestment">EdTech</option>
+                  {
+                    Industries.map(industry =>
+                      <option value={industry} key={industry}>{industry}</option>)
+                  }
                 </select>
               </label>
               <label style={labelStyle}>
                 Round of Funding
                 <select name="roundOfFunding" style={inputStyle} onChange={event => setRound(event.target.value)}>
                   <option value="">Select...</option>
-                  <option value="">Pre-Seed</option>
-                  <option value="">Seed Round</option>
-                  <option value="active">Series A</option>
-                  <option value="rejected">Series B</option>
-                  <option value="postInvestment">Series C</option>
+                  {
+                    enumKeys(Round).map(key =>
+                      <option value={key} key={key}>{(Round as any)[key]}</option>
+                    )
+                  }
+
                 </select>
               </label>
               <label style={labelStyle}>
                 Pod
                 <select name="pod" style={inputStyle} onChange={event => setPodID(event.target.value)}>
+                  <option value="" key="">Select ...</option>
                   {
                     pods.pods.map(pod =>
                       pod.data.leader ? <option value={pod.ref.id} key={pod.ref.id}>
