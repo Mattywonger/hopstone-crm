@@ -8,6 +8,9 @@ import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import { DocumentData, DocumentReference, arrayRemove } from "firebase/firestore";
 import { updateDoc } from "firebase/firestore";
+import * as Dialog from "@radix-ui/react-dialog"
+import { Cross2Icon } from "@radix-ui/react-icons";
+import "../dealCard.css"
 
 interface Props {
   deal: Deal;
@@ -17,6 +20,7 @@ interface Props {
 
 function DealCard({ deal, deleteTask, updateTask }: Props) {
   const [mouseIsOver, setMouseIsOver] = useState(false);
+  const [showModel, setShowModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
   const {
@@ -75,27 +79,35 @@ function DealCard({ deal, deleteTask, updateTask }: Props) {
         setMouseIsOver(false);
       }}
     >
+
       <div className="my-auto h-full w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap">
         <h1>{deal.data.name}</h1>
         <h2>{deal.data.pointPersonName}</h2>
+        <Dialog.Root>
+          <Dialog.Trigger asChild>
+            <Button>View</Button>
+          </Dialog.Trigger>
+          <Dialog.Portal>
+            <Dialog.Overlay className="DialogOverlay" />
+            <Dialog.Content className="DialogContent">
+              <Dialog.Title className="DialogTitle">{deal.data.name}</Dialog.Title>
+              <div>
+
+              </div>
+              <Dialog.Close asChild>
+                <button className="IconButton" aria-label="Close">
+                  <Cross2Icon />
+                </button>
+              </Dialog.Close>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>
         <Button onClick={e => {
           updateDoc(deal.data.pod,
             { deals: arrayRemove(deal.ref) });
           deleteDeal(deal)
         }}>Delete</Button>
       </div>
-
-      {mouseIsOver && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation(); // Prevent the click from triggering the onClick of the parent div
-            //deleteTask(task.id);
-          }}
-          className="stroke-white absolute right-4 top-1/2 -translate-y-1/2 bg-columnBackgroundColor p-2 rounded opacity-60 hover:opacity-100"
-        >
-          <TrashIcon />
-        </button>
-      )}
     </div>
   );
 }
