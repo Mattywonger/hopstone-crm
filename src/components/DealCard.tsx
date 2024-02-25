@@ -11,6 +11,7 @@ import { updateDoc } from "firebase/firestore";
 import * as Dialog from "@radix-ui/react-dialog"
 import { Cross2Icon } from "@radix-ui/react-icons";
 import "../dealCard.css"
+import { PitchDeck } from "./PitchDeck";
 
 interface Props {
   deal: Deal;
@@ -92,7 +93,7 @@ function DealCard({ deal, deleteTask, updateTask }: Props) {
             <Dialog.Content className="DialogContent">
               <Dialog.Title className="DialogTitle">{deal.data.name}</Dialog.Title>
               <div>
-
+                <PitchDeck address={`Deals/${deal.ref.id}/deck`} />
               </div>
               <Dialog.Close asChild>
                 <button className="IconButton" aria-label="Close">
