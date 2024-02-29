@@ -33,6 +33,7 @@ export enum ARP {
 }
 
 export enum Status {
+    InfoCall = "Info Call",
     OnePager = "One Pager",
     DueDiligence = "Due Diligence",
     InvestmentMemo = "Investment Memo",
