@@ -83,18 +83,16 @@ function KanbanBoard() {
     })
   );
 
+  const cardStyle = {
+    border: '2px solid black',
+    backgroundColor: 'white'
+    
+    /* Add other styles here as needed */
+  };
+
   return (
-    <div
-      className="
-        m-auto
-        flex
-        min-h-screen
-        w-full
-        items-center
-        overflow-x-auto
-        overflow-y-hidden
-        px-[40px]
-    "
+    <div 
+      className="kanbanBoard"
     >
       <DndContext
         sensors={sensors}
@@ -102,7 +100,7 @@ function KanbanBoard() {
         onDragEnd={onDragEnd}
         onDragOver={onDragOver}
       >
-        <div className="m-auto flex gap-4">
+        <div  className="m-auto flex gap-4">
           <div className="flex gap-4">
             <SortableContext items={columnsId}>
               {columns.map((col) => (
@@ -119,7 +117,7 @@ function KanbanBoard() {
               ))}
             </SortableContext>
           </div>
-          <button
+          <button 
             onClick={() => {
               createNewColumn();
             }}
@@ -129,9 +127,9 @@ function KanbanBoard() {
       min-w-[350px]
       cursor-pointer
       rounded-lg
-      bg-mainBackgroundColor
+      bg-white
       border-2
-      border-columnBackgroundColor
+      border-black
       p-4
       ring-rose-500
       hover:ring-2
@@ -160,7 +158,7 @@ function KanbanBoard() {
               />
             )}
             {activeTask && (
-              <TaskCard
+              <TaskCard 
                 task={activeTask}
                 deleteTask={deleteTask}
                 updateTask={updateTask}

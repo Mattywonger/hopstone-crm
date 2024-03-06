@@ -50,6 +50,8 @@ function ColumnContainer({
   const style = {
     transition,
     transform: CSS.Transform.toString(transform),
+    
+    
   };
 
   if (isDragging) {
@@ -90,7 +92,7 @@ function ColumnContainer({
         {...listeners}
         onClick={() => setEditMode(true)}
         className="
-          bg-mainBackgroundColor
+          bg-white
           text-md
           h-[50px]
           cursor-grab
@@ -110,7 +112,7 @@ function ColumnContainer({
               flex
               justify-center
               items-center
-              bg-columnBackgroundColor
+              bg-white
               px-2
               py-1
               text-sm
@@ -173,10 +175,11 @@ function ColumnContainer({
           flex
           items-center
           justify-center
-          border-columnBackgroundColor
+          border-black
           border-2
           rounded-md
           p-2
+          bg-white
           border-x-columnBackgroundColor
           hover:bg-mainBackgroundColor
           hover:text-rose-500

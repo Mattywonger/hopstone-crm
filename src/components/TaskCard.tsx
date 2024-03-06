@@ -33,6 +33,9 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
   const style = {
     transition,
     transform: CSS.Transform.toString(transform),
+    backgroundColor: 'white',
+    border: '2px solid black', // Correct border shorthand
+    
   };
 
   const toggleEditMode = () => {
@@ -83,7 +86,7 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
   }
 
   return (
-    <div
+    <div 
       ref={setNodeRef}
       style={style}
       {...attributes}
